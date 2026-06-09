@@ -1,9 +1,4 @@
 import fetch from "node-fetch";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const ORS_API_KEY = process.env.ORS_API_KEY;
 
 const MODE_MAP = {
   car: "driving-car",
@@ -13,6 +8,14 @@ const MODE_MAP = {
 
 export async function getRoute(source, destination, mode = "car") {
   try {
+    // Read at call time so dotenv has already loaded
+    const ORS_API_KEY = process.env.ORS_API_KEY;
+
+    if (!ORS_API_KEY) {
+      console.error("ORS_API_KEY is missing from .env");
+      return { success: false, error: "ORS API key not configured" };
+    }
+
     const orsProfile = MODE_MAP[mode] || MODE_MAP.car;
 
     const body = {
@@ -21,6 +24,8 @@ export async function getRoute(source, destination, mode = "car") {
         [destination.longitude, destination.latitude],
       ],
     };
+
+    console.log("ORS REQUEST:", orsProfile, body.coordinates);
 
     const response = await fetch(
       `https://api.openrouteservice.org/v2/directions/${orsProfile}`,
@@ -37,8 +42,8 @@ export async function getRoute(source, destination, mode = "car") {
     if (!response.ok) {
       console.log("ORS STATUS:", response.status);
       const text = await response.text();
-      console.log("ORS ERROR:", text);
-      return { success: false, error: "ORS API error" };
+      console.log("ORS ERROR BODY:", text);
+      return { success: false, error: `ORS API error (${response.status})` };
     }
 
     const data = await response.json();

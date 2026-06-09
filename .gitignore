@@ -32,6 +32,26 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
+backend/.env
+backend/**/.env
+
+# never ignore the example file
+!.env.example
+!backend/.env.example
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Temp / scratch files
+chatres.txt
+chatres2.txt
+response.txt
+
+# Large binary files that shouldn't be in the repo
+assets/images/*.pdf
 
 # typescript
 *.tsbuildinfo

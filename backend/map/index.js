@@ -1,5 +1,12 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+// Load shared .env from backend/
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: join(__dirname, "../.env") });
 
 console.log("1. Starting index.js...");
 
@@ -33,7 +40,7 @@ app.get("/api/search", async (req, res) => {
     const result = await searchPlace(place);
 
     if (!result.success) {
-      return res.status(404).json(result);
+      return res.status(200).json(result);
     }
 
     res.json(result);
@@ -75,7 +82,7 @@ app.post("/api/route", async (req, res) => {
   }
 });
 
-const PORT = 8000;
+const PORT = process.env.MAP_PORT || 8002;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`5. Server running on port ${PORT}`);

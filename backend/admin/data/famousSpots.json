@@ -19,8 +19,8 @@
     {
       "id": "pg3",
       "name": "Sisodia Rani Garden",
-      "lat": 26.9028,
-      "lng": 75.859,
+      "lat": 26.9155,
+      "lng": 75.8624,
       "address": "Agra Rd, Jaipur",
       "timings": "08:00-17:00"
     },
@@ -111,8 +111,8 @@
     {
       "id": "ag1",
       "name": "Jawahar Kala Kendra",
-      "lat": 26.864,
-      "lng": 75.807,
+      "lat": 26.8948,
+      "lng": 75.8073,
       "address": "JLN Marg, Jaipur",
       "timings": "10:00-21:00"
     },
@@ -276,58 +276,58 @@
   "water-parks": [
     {
       "id": "wp1",
-      "name": "Fun Kingdom Water Park",
-      "lat": 26.85,
-      "lng": 75.9,
-      "address": "Jaipur-Agra Highway",
-      "timings": "10:00-18:00"
+      "name": "Fun Kingdom Amusement Park",
+      "lat": 26.8487,
+      "lng": 75.7615,
+      "address": "B2 Bypass Rd, Shipra Path, RIICO Industrial Area, Mansarovar, Jaipur",
+      "timings": "10:00-19:00"
     },
     {
       "id": "wp2",
       "name": "Pink Pearl Water Park",
-      "lat": 26.88,
-      "lng": 75.7,
-      "address": "Ajmer Rd, Jaipur",
+      "lat": 26.8980,
+      "lng": 75.6520,
+      "address": "NH-8, Ajmer Road, Near Bhakrota, Jaipur",
       "timings": "10:00-18:30"
     },
     {
       "id": "wp3",
       "name": "Angel Resort Water Park",
-      "lat": 26.94,
-      "lng": 75.7,
-      "address": "Sikar Rd, Jaipur",
+      "lat": 26.9820,
+      "lng": 75.6850,
+      "address": "Sikar Highway, 20th Milestone, Rajawas, Jaipur",
       "timings": "09:00-18:00"
     },
     {
       "id": "wp4",
       "name": "Mauj Mahal Water Park",
-      "lat": 26.85,
-      "lng": 75.82,
-      "address": "Jaipur",
+      "lat": 27.0150,
+      "lng": 75.7250,
+      "address": "Chomu, Sikar Road, Jaipur",
       "timings": "10:00-18:00"
     },
     {
       "id": "wp5",
       "name": "Appu Ghar Water Park",
-      "lat": 26.87,
-      "lng": 75.78,
-      "address": "Jaipur",
+      "lat": 26.8890,
+      "lng": 75.7760,
+      "address": "Vishwakarma Industrial Area, Jaipur",
       "timings": "10:00-18:00"
     },
     {
       "id": "wp6",
-      "name": "Sunrise Dream World",
-      "lat": 26.9,
-      "lng": 75.9,
-      "address": "Jaipur",
-      "timings": "10:00-19:00"
+      "name": "Funfair Water Park",
+      "lat": 26.9120,
+      "lng": 75.6380,
+      "address": "Ajmer Road, Jaipur",
+      "timings": "10:00-18:00"
     },
     {
       "id": "wp7",
-      "name": "Wonderland Amusement Park",
-      "lat": 26.91,
-      "lng": 75.88,
-      "address": "Jaipur",
+      "name": "Birla City Water Park",
+      "lat": 26.9050,
+      "lng": 75.6650,
+      "address": "Makhupura Industrial Area, Ajmer Road, Jaipur",
       "timings": "10:00-18:00"
     }
   ],
@@ -367,16 +367,16 @@
     {
       "id": "rp5",
       "name": "Galtaji Temple",
-      "lat": 26.9,
-      "lng": 75.86,
+      "lat": 26.9063,
+      "lng": 75.8626,
       "address": "Near Galta Gate, Jaipur",
       "timings": "05:00-21:00"
     },
     {
       "id": "rp6",
       "name": "Khole Ke Hanuman Ji",
-      "lat": 26.94,
-      "lng": 75.85,
+      "lat": 26.9523,
+      "lng": 75.8455,
       "address": "Jaipur",
       "timings": "05:00-21:00"
     },

@@ -1,6 +1,12 @@
 print(">>> chatbot.py loaded <<<")
 
 import os
+import sys
+
+# Force UTF-8 output on Windows to avoid cp1252 emoji encoding errors
+if sys.stdout.encoding != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8")
+
 import certifi
 os.environ["SSL_CERT_FILE"] = certifi.where()
 
@@ -14,7 +20,7 @@ from chatbot.prompt import SYSTEM_PROMPT
 
 
 BASE_DIR = Path(__file__).parent
-ENV_PATH = BASE_DIR / ".env"
+ENV_PATH = BASE_DIR.parent / ".env"   # shared backend/.env
 DATA_PATH = BASE_DIR / "jaipur_city_data.json"
 
 
@@ -28,7 +34,7 @@ if not OPENROUTER_API_KEY:
 
 MODEL = "openai/gpt-3.5-turbo"
 
-print("✅ .env loaded successfully")
+print("[OK] .env loaded successfully")
 print("Resolved DATA_PATH:", DATA_PATH)
 
 
@@ -38,7 +44,7 @@ if not DATA_PATH.exists():
 with open(DATA_PATH, "r", encoding="utf-8") as f:
     CITY_DATA = json.load(f)
 
-print("✅ Jaipur city data loaded successfully!")
+print("[OK] Jaipur city data loaded successfully!")
 
 
 
@@ -102,6 +108,7 @@ def flatten_entities():
                         "name_norm": normalize(key.replace("_", " ")),
                         "data": value
                     })
+
 
     return entities
 
@@ -271,7 +278,7 @@ def ask_ai_fallback(user_query: str) -> str:
             headers=headers,
             json=payload,
             timeout=20,
-            verify=False,
+            verify=certifi.where(),
         )
 
         if res.status_code != 200:

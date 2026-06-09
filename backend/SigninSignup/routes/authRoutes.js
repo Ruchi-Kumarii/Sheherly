@@ -25,15 +25,16 @@ router.delete("/delete-account", auth, deleteAccount);
 
 router.patch("/update-profile", auth, async (req, res) => {
   try {
-    console.log("PATCH /update-profile body:", req.body); 
+    console.log("PATCH /update-profile body keys:", Object.keys(req.body));
     console.log("Authenticated userId:", req.userId);
-    const { name, phone } = req.body;
+    const { name, phone, avatar } = req.body;
 
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
     if (name !== undefined) user.name = name;
     if (phone !== undefined) user.phone = phone;
+    if (avatar !== undefined) user.avatar = avatar;
 
     await user.save();
 
@@ -45,6 +46,7 @@ router.patch("/update-profile", auth, async (req, res) => {
         email: user.email,
         name: user.name,
         phone: user.phone,
+        avatar: user.avatar,
       },
     });
   } catch (err) {

@@ -4,8 +4,8 @@
       "id": "h1",
       "name": "Sawai Man Singh Hospital",
       "address": "JLN Marg, Jaipur",
-      "lat": 26.905,
-      "lng": 75.816,
+      "lat": 26.9062,
+      "lng": 75.8137,
       "phone": "0141-2518000",
       "timings": "24 hours"
     },
@@ -13,133 +13,124 @@
       "id": "h2",
       "name": "Fortis Hospital Jaipur",
       "address": "Malviya Nagar, Jaipur",
-      "lat": 26.8505,
-      "lng": 75.805,
+      "lat": 26.8464,
+      "lng": 75.8036,
       "phone": "0141-2547000",
       "timings": "24 hours"
     },
     {
       "id": "h3",
       "name": "Narayana Multispeciality Hospital",
-      "address": "Pratap Nagar, Jaipur",
-      "lat": 26.8002,
-      "lng": 75.8201,
+      "address": "Kumbha Marg, Pratap Nagar, Jaipur",
+      "lat": 26.7949,
+      "lng": 75.8247,
       "phone": "1800-309-0309",
       "timings": "24 hours"
     },
     {
       "id": "h4",
-      "name": "EHCC Hospital",
-      "address": "Malviya Nagar, Jaipur",
-      "lat": 26.8573,
-      "lng": 75.8035,
-      "phone": "0141-5197000",
+      "name": "Santokba Durlabhji Memorial Hospital",
+      "address": "Bhawani Singh Road, Jaipur",
+      "lat": 26.8943,
+      "lng": 75.8100,
+      "phone": "0141-2566251",
       "timings": "24 hours"
     },
     {
       "id": "h5",
-      "name": "Santokba Durlabhji Memorial Hospital",
-      "address": "Bhawani Singh Road, Jaipur",
-      "lat": 26.9025,
-      "lng": 75.79,
-      "phone": "0141-2566251",
+      "name": "Mahatma Gandhi Hospital",
+      "address": "Sitapura, Jaipur",
+      "lat": 26.7880,
+      "lng": 75.8420,
+      "phone": "0141-2770200",
       "timings": "24 hours"
     }
   ],
   "pharmacies": [
     {
       "id": "p1",
-      "name": "Apollo Pharmacy",
-      "address": "Vaishali Nagar, Jaipur",
-      "lat": 26.91,
-      "lng": 75.74,
+      "name": "Apollo Pharmacy Vaishali Nagar",
+      "address": "G7, Vaishali Tower, Vaishali Nagar, Jaipur",
+      "lat": 26.9131,
+      "lng": 75.7307,
       "phone": "040-47474747",
-      "timings": "9-22"
+      "timings": "9 AM - 10 PM"
     },
     {
       "id": "p2",
-      "name": "MedPlus Pharmacy",
-      "address": "C Scheme, Jaipur",
-      "lat": 26.9105,
-      "lng": 75.79,
-      "phone": "040-67006700",
-      "timings": "8-23"
+      "name": "Medkart Pharmacy Bais Godam",
+      "address": "3, Dhruv Marg, Parnami Block, Gurunanakpura, Jaipur",
+      "lat": 26.9249,
+      "lng": 75.7902,
+      "phone": "9829286836",
+      "timings": "9 AM - 9 PM"
     },
     {
       "id": "p3",
-      "name": "Wellness Forever Pharmacy",
+      "name": "Jan Aushadhi Kendra Malviya Nagar",
       "address": "Malviya Nagar, Jaipur",
-      "lat": 26.852,
-      "lng": 75.804,
-      "phone": "022-40404040",
-      "timings": "24 hours"
-    },
-    {
-      "id": "p4",
-      "name": "Guardian Pharmacy",
-      "address": "Tonk Road, Jaipur",
-      "lat": 26.87,
-      "lng": 75.8,
-      "phone": "1860-266-8666",
-      "timings": "9-23"
+      "lat": 26.8620,
+      "lng": 75.8120,
+      "phone": "1800-180-8080",
+      "timings": "8 AM - 9 PM"
     }
   ],
   "clinics": [
     {
       "id": "c1",
-      "name": "CK Birla Hospital Clinic",
+      "name": "CK Birla Hospital",
       "address": "Gopalpura Bypass, Jaipur",
-      "lat": 26.865,
-      "lng": 75.785,
+      "lat": 26.8751,
+      "lng": 75.7646,
       "phone": "0141-3090300",
-      "timings": "10-20"
+      "timings": "10 AM - 8 PM"
     },
     {
       "id": "c2",
-      "name": "Jaipur Heart Clinic",
-      "address": "C Scheme, Jaipur",
-      "lat": 26.912,
-      "lng": 75.7905,
-      "phone": "0141-2377000",
-      "timings": "9-19"
+      "name": "Apex Hospitals",
+      "address": "SP-4 & 6, Malviya Industrial Area, Malviya Nagar, Jaipur",
+      "lat": 26.8494,
+      "lng": 75.8063,
+      "phone": "0141-4965555",
+      "timings": "9 AM - 7 PM"
     },
     {
       "id": "c3",
-      "name": "Sharma Clinic",
-      "address": "Vaishali Nagar, Jaipur",
-      "lat": 26.9108,
-      "lng": 75.742,
-      "phone": "0141-2356789",
-      "timings": "10-21"
+      "name": "Manipal Hospital Jaipur",
+      "address": "Sector 5, Vidhyadhar Nagar, Jaipur",
+      "lat": 26.9521,
+      "lng": 75.7841,
+      "phone": "0141-5174000",
+      "timings": "24 hours"
     }
   ],
   "labs": [
     {
       "id": "l1",
       "name": "Dr Lal PathLabs",
-      "address": "Tonk Road, Jaipur",
-      "lat": 26.87,
-      "lng": 75.8,
+      "address": "A-2, Shyam Nagar, Ajmer Road, Jaipur",
+      "lat": 26.8980,
+      "lng": 75.7580,
       "phone": "011-49885050",
-      "timings": "7-21"
+      "timings": "7 AM - 9 PM"
     },
     {
       "id": "l2",
-      "name": "SRL Diagnostics",
-      "address": "Malviya Nagar, Jaipur",
-      "lat": 26.85,
-      "lng": 75.806,
-      "phone": "1860-222-7745",
-      "timings": "8-20"
+      "name": "Metropolis Healthcare",
+      "address": "C-53, Sarojini Marg, C Scheme, Jaipur",
+      "lat": 26.9042,
+      "lng": 75.7992,
+      "phone": "040-40303030",
+      "timings": "7 AM - 8 PM"
     },
     {
       "id": "l3",
-      "name": "Thyrocare Collection Center",
-      "address": "Vaishali Nagar, Jaipur",
-      "lat": 26.911,
-      "lng": 75.745,
-      "phone": "022-30900000",
-      "timings": "6-14"
+      "name": "SRL Diagnostics Malviya Nagar",
+      "address": "C-97, Malviya Nagar, Jaipur",
+      "lat": 26.8612,
+      "lng": 75.8098,
+      "phone": "1860-222-7745",
+      "timings": "7 AM - 8 PM"
     }
   ]
 }

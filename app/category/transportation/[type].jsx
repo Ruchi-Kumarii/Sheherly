@@ -9,9 +9,11 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Slider from "@react-native-community/slider";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
+import { saveOfflineData, loadOfflineData } from "../../../hooks/useOfflineCache";
+import { useNetworkStatus } from "../../../hooks/useNetworkStatus";
 
 export default function Result() {
   const {
@@ -21,6 +23,7 @@ export default function Result() {
     service = "Passenger",
     area = "Area",
   } = useLocalSearchParams();
+  const router = useRouter();
 
   // BUS STATES
   const [allBuses, setAllBuses] = useState([]);
@@ -39,6 +42,8 @@ export default function Result() {
 
   // LOADING
   const [loading, setLoading] = useState(true);
+  const [isFromCache, setIsFromCache] = useState(false);
+  const { isOnline } = useNetworkStatus();
 
   // FETCH DATA
   useEffect(() => {
@@ -48,43 +53,83 @@ export default function Result() {
 
         // RICKSHAW
         if (type === "rickshaw") {
+          if (!isOnline) {
+            const cached = await loadOfflineData("transportation", "rickshaw");
+            if (cached) {
+              setAllRickshaws(cached.data || []);
+              setIsFromCache(true);
+            }
+            setLoading(false);
+            return;
+          }
           const snapshot = await getDocs(collection(db, "erickshaws"));
-          const data = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+          const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
           setAllRickshaws(data);
+          setIsFromCache(false);
+          await saveOfflineData("transportation", "rickshaw", data, {
+            label: "E-Rickshaw",
+            emoji: "🛺",
+            accentColor: "#3b82f6",
+            route: "/category/transportation/search",
+          });
           setLoading(false);
           return;
         }
 
         // BIKE RENTALS
         if (type === "bike-rentals") {
+          if (!isOnline) {
+            const cached = await loadOfflineData("transportation", "bike-rentals");
+            if (cached) {
+              setBikeRentals(cached.data || []);
+              setIsFromCache(true);
+            }
+            setLoading(false);
+            return;
+          }
           const snapshot = await getDocs(collection(db, "bikeRentals"));
-          const data = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+          const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
           setBikeRentals(data);
+          setIsFromCache(false);
+          await saveOfflineData("transportation", "bike-rentals", data, {
+            label: "Bike Rentals",
+            emoji: "🚲",
+            accentColor: "#3b82f6",
+            route: "/category/transportation/search",
+          });
           setLoading(false);
           return;
         }
 
         // BUS
+        if (!isOnline) {
+          const cached = await loadOfflineData("transportation", `bus-${from}-${to}`);
+          if (cached) {
+            setAllBuses(cached.data || []);
+            setBuses(cached.data || []);
+            setIsFromCache(true);
+          }
+          setLoading(false);
+          return;
+        }
         const snapshot = await getDocs(collection(db, "buses"));
-        const data = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
+        const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         const filtered = data.filter(
           (bus) =>
             bus.from?.toLowerCase().trim() === from?.toLowerCase().trim() &&
             bus.to?.toLowerCase().trim() === to?.toLowerCase().trim()
         );
-
         setAllBuses(filtered);
         setBuses(filtered);
+        setIsFromCache(false);
+        if (from && to) {
+          await saveOfflineData("transportation", `bus-${from}-${to}`, filtered, {
+            label: `Bus: ${from} → ${to}`,
+            emoji: "🚌",
+            accentColor: "#3b82f6",
+            route: "/category/transportation/search",
+          });
+        }
         setLoading(false);
       } catch (error) {
         console.log("Error fetching data:", error);
@@ -93,7 +138,7 @@ export default function Result() {
     };
 
     fetchData();
-  }, [type, from, to]);
+  }, [type, from, to, isOnline]);
 
   // BUS FILTERS
   useEffect(() => {
@@ -207,6 +252,14 @@ export default function Result() {
             {service} • {area}
           </Text>
         </View>
+
+        {!isOnline && (
+          <View className="mx-4 mb-3 bg-blue-100 border border-blue-300 px-3 py-2 rounded-xl">
+            <Text className="text-blue-700 text-xs font-medium">
+              📴 Offline — {isFromCache ? "showing saved data" : "no saved data available"}
+            </Text>
+          </View>
+        )}
 
         <View className="flex-row justify-between items-center px-4 mb-3">
           <Text className="text-[13px] text-slate-500 font-medium">
@@ -323,6 +376,14 @@ export default function Result() {
           </Text>
         </View>
 
+        {!isOnline && (
+          <View className="mx-4 mb-3 bg-blue-100 border border-blue-300 px-3 py-2 rounded-xl">
+            <Text className="text-blue-700 text-xs font-medium">
+              📴 Offline — {isFromCache ? "showing saved data" : "no saved data available"}
+            </Text>
+          </View>
+        )}
+
         <FlatList
           data={bikeRentals}
           keyExtractor={(item, index) =>
@@ -411,7 +472,9 @@ export default function Result() {
 
                   <TouchableOpacity
                     className="bg-slate-700 px-4 py-3 rounded-xl flex-1 items-center"
-                    onPress={() => Linking.openURL(item.google_maps_link)}
+                    onPress={() =>
+                      router.push(`/(tabs)/map?destLat=${item.lat}&destLng=${item.lng}&destName=${encodeURIComponent(item.shop_name || item.name)}`)
+                    }
                   >
                     <Text className="text-white font-bold">📍 Map</Text>
                   </TouchableOpacity>

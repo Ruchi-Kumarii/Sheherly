@@ -8,7 +8,7 @@ const travelCategories = [
   { id: "3", name: "Art Galleries", slug: "art-galleries", emoji: "🖼️", desc: "Culture & exhibitions" },
   { id: "4", name: "Shopping Malls", slug: "shopping-malls", emoji: "🏬", desc: "Brands, food & entertainment" },
   { id: "5", name: "Local Markets", slug: "local-markets", emoji: "🛍️", desc: "Street shopping & souvenirs" },
-  { id: "6", name: "Water Parks", slug: "water-parks", emoji: "💦", desc: "Rides & fun activities" },
+  { id: "6", name: "Water Parks", slug: "water-parks", emoji: "🎢", desc: "Rides & fun activities" },
   { id: "7", name: "Religious Places", slug: "religious-places", emoji: "🛕", desc: "Peace & spirituality" },
   { id: "8", name: "View Points", slug: "view-points", emoji: "🌄", desc: "Scenic city views" },
 ];

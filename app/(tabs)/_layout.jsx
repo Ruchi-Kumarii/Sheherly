@@ -79,6 +79,13 @@ const TabLayout = () => {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="offline"
+        options={{
+          href: null, // hidden from tab bar — accessible via profile screen
+        }}
+      />
     </Tabs>
   );
 };

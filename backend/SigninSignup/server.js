@@ -1,16 +1,20 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 import connectDB from "./db.js";
 import authRoutes from "./routes/authRoutes.js";
 
-dotenv.config();
+// Load shared .env from backend/
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: join(__dirname, "../.env") });
 
 const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
 // Debug logger → shows every request coming in
 app.use((req, res, next) => {
@@ -40,7 +44,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal server error" });
 });
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.AUTH_PORT || 8000;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);

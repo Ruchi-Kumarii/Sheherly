@@ -1,7 +1,7 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const transportOptions = [
   {
@@ -10,13 +10,6 @@ const transportOptions = [
     slug: "bus",
     emoji: "🚌",
     desc: "Affordable · Frequent",
-  },
-  {
-    id: "2",
-    name: "Cab",
-    slug: "cab",
-    emoji: "🚕",
-    desc: "Doorstep pickup",
   },
   {
     id: "3",
