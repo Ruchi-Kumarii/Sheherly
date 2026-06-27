@@ -1,8 +1,9 @@
 import { View, TextInput, FlatList, Pressable, Text, Alert, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
+import { SEARCH_URL } from "../../config";
 
-const BACKEND_URL = "http://10.253.101.139:7000";
+const BACKEND_URL = SEARCH_URL;
 
 export default function Search() {
   const router = useRouter();

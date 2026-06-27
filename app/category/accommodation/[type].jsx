@@ -1,12 +1,14 @@
 import { View, Text, FlatList, TouchableOpacity, Linking, Alert, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { ADMIN_URL } from "../../../config";
 
-const BASE_URL = "http://10.253.101.139:9000";
+const BASE_URL = ADMIN_URL;
 
 export default function AccommodationTypePage() {
   const { type } = useLocalSearchParams();
+  const router = useRouter();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -88,9 +90,10 @@ export default function AccommodationTypePage() {
 
               <TouchableOpacity
                 onPress={() =>
-                  openLink(
-                    `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`
-                  )
+                  router.push({
+                    pathname: "/map",
+                    params: { destLat: item.lat, destLng: item.lng, destName: item.name },
+                  })
                 }
                 className="mt-2 bg-gray-200 px-3 py-2 rounded-lg"
               >

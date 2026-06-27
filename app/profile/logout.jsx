@@ -1,19 +1,15 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from "expo-secure-store";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 
 export default function Logout() {
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      // Remove everything related to login
-      await AsyncStorage.removeItem("token");
-      await AsyncStorage.removeItem("user");
-      await SecureStore.deleteItemAsync("token");
-
+      await signOut(auth);
       router.replace("/");
     } catch (error) {
       console.log("Logout error:", error);

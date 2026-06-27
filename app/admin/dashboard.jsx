@@ -9,7 +9,8 @@ import {
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 
 const logo = require("../../assets/images/sheherlyTitle.png");
 
@@ -18,7 +19,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem("user");
+      await signOut(auth);
       router.replace("/");
     } catch (error) {
       console.log("LOGOUT ERROR:", error);

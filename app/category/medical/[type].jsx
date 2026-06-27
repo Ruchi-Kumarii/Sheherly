@@ -8,14 +8,16 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
+import { ADMIN_URL } from "../../../config";
 
-const BASE_URL = "http://10.253.101.139:9000";
+const BASE_URL = ADMIN_URL;
 
 export default function MedicalTypePage() {
   const { type } = useLocalSearchParams();
+  const router = useRouter();
 
   const [userLocation, setUserLocation] = useState(null);
   const [data, setData] = useState([]);
@@ -102,9 +104,11 @@ export default function MedicalTypePage() {
   };
 
 
-  const openMaps = (lat, lng) => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-    Linking.openURL(url);
+  const openMaps = (lat, lng, name) => {
+    router.push({
+      pathname: "/map",
+      params: { destLat: lat, destLng: lng, destName: name },
+    });
   };
 
   if (loading) {
@@ -158,7 +162,7 @@ export default function MedicalTypePage() {
                 </TouchableOpacity>
               )}
 
-              <TouchableOpacity onPress={() => openMaps(item.lat, item.lng)}>
+              <TouchableOpacity onPress={() => openMaps(item.lat, item.lng, item.name)}>
                 <Text className="text-green-600">🧭 Directions</Text>
               </TouchableOpacity>
 

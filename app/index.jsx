@@ -8,25 +8,25 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from "expo-secure-store";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 const logo = require("../assets/images/sheherlyTitle.png");
 
 export default function Index() {
   const router = useRouter();
 
   const handleGuestUser = async () => {
-  try {
-    await AsyncStorage.removeItem("token");
-    await AsyncStorage.removeItem("user");
-    await SecureStore.deleteItemAsync("token");
-
-    router.replace("/home");
-  } catch (error) {
-    console.log("Guest login error:", error);
-    router.push("/home");
-  }
-};
+    try {
+      // Sign out of Firebase so profile shows as guest
+      if (auth.currentUser) {
+        await signOut(auth);
+      }
+      router.replace("/home");
+    } catch (error) {
+      console.log("Guest login error:", error);
+      router.replace("/home");
+    }
+  };
 
   return (
     <SafeAreaView className="bg-[white] flex-1">

@@ -7,10 +7,10 @@
 //      you change networks.
 // =============================================
 
-const MY_IP = "10.145.100.157";
+const MY_IP = "10.145.64.89";
 
-// AUTH is now handled by Firebase — no AUTH_URL needed
+// AUTH is handled by Firebase Auth + Firestore — no AUTH_URL needed
 export const ADMIN_URL   = `http://${MY_IP}:9000`;   // Admin/Data backend
 export const MAP_URL     = `http://${MY_IP}:8002`;   // Map/Route backend
 export const CHATBOT_URL = `http://${MY_IP}:8001`;   // Python chatbot backend
-export const SEARCH_URL  = `http://${MY_IP}:5000`;   // Search/Suggest backend
+export const SEARCH_URL  = `http://${MY_IP}:7000`;   // Search/Suggest backend

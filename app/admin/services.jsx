@@ -21,8 +21,9 @@ import {
   addTransportItem,
   deleteTransportItem,
 } from "../../utils/transportAdmin";
+import { ADMIN_URL } from "../../config";
 
-const BASE_URL = "http://10.253.101.139:9000";
+const BASE_URL = ADMIN_URL;
 
 const categories = {
   food: ["restaurants", "street-food", "chill-cafes", "night-cafes"],

@@ -119,17 +119,15 @@ export const addCategoryItem = async (req, res) => {
     const rawData = fs.readFileSync(filePath, "utf-8");
     const jsonData = JSON.parse(rawData);
 
-
-    if (type && jsonData[type]) {
+    if (type) {
+      // Create the array for this type if it doesn't exist yet
+      if (!Array.isArray(jsonData[type])) {
+        jsonData[type] = [];
+      }
       jsonData[type].push(newItem);
-    }
-
-
-    else if (category === "safety" && Array.isArray(jsonData.police)) {
+    } else if (category === "safety" && Array.isArray(jsonData.police)) {
       jsonData.police.push(newItem);
-    }
-
-    else {
+    } else {
       return res.status(404).json({ message: "Invalid type/category structure" });
     }
 

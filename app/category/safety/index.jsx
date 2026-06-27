@@ -9,8 +9,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
+import { useRouter } from "expo-router";
+import { ADMIN_URL } from "../../../config";
 
-const BASE_URL = "http://10.253.101.139:9000"; 
+const BASE_URL = ADMIN_URL;
 
 const emergencyServices = [
   { id: "1", title: "Police", number: "100", emoji: "🚓", desc: "Report crime or danger", color: "#e53935" },
@@ -24,6 +26,7 @@ export default function SafetyPage() {
   const [showPolice, setShowPolice] = useState(false);
   const [policeStations, setPoliceStations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const fetchPoliceData = async () => {
     try {
@@ -133,9 +136,10 @@ export default function SafetyPage() {
 
                     <TouchableOpacity
                       onPress={() =>
-                        Linking.openURL(
-                          `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`
-                        )
+                        router.push({
+                          pathname: "/map",
+                          params: { destLat: item.lat, destLng: item.lng, destName: item.name },
+                        })
                       }
                       className="mt-3 bg-red-500 px-3 py-2 rounded-lg"
                     >

@@ -8,13 +8,15 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
+import { ADMIN_URL } from "../../../config";
 
-const BASE_URL = "http://10.253.101.139:9000";
+const BASE_URL = ADMIN_URL;
 
 export default function FoodTypePage() {
   const { slug } = useLocalSearchParams();
+  const router = useRouter();
 
   const [data, setData] = useState([]);
   const [sortType, setSortType] = useState("");
@@ -106,9 +108,10 @@ export default function FoodTypePage() {
 
                 <TouchableOpacity
                   onPress={() =>
-                    Linking.openURL(
-                      `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`
-                    )
+                    router.push({
+                      pathname: "/map",
+                      params: { destLat: item.lat, destLng: item.lng, destName: item.name },
+                    })
                   }
                   className="ml-2"
                 >

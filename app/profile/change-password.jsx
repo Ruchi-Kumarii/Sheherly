@@ -1,84 +1,69 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-
-const BASE_URL = "http://10.253.101.139:5000";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+} from "firebase/auth";
+import { auth } from "../../firebase";
 
 export default function ChangePassword() {
   const router = useRouter();
-
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleChangePassword = async () => {
-    // Validation
     if (!currentPassword || !newPassword || !confirmPassword) {
       Alert.alert("Error", "All fields are required");
       return;
     }
-
     if (newPassword !== confirmPassword) {
       Alert.alert("Error", "Passwords do not match");
       return;
     }
+    if (newPassword.length < 6) {
+      Alert.alert("Error", "New password must be at least 6 characters");
+      return;
+    }
 
     try {
-      const token = await AsyncStorage.getItem("token");
-
-      if (!token) {
-        Alert.alert("Error", "User not logged in");
+      const user = auth.currentUser;
+      if (!user) {
+        Alert.alert("Error", "Not logged in");
         router.replace("/signin");
         return;
       }
 
-      const res = await fetch(`${BASE_URL}/api/auth/change-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          currentPassword,
-          newPassword,
-        }),
-      });
+      // Re-authenticate first
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      await reauthenticateWithCredential(user, credential);
 
-      const data = await res.json();
+      // Update password
+      await updatePassword(user, newPassword);
 
-      if (!res.ok) {
-        Alert.alert("Error", data.message || "Failed to update password");
-        return;
-      }
-
-      // Success
       Alert.alert(
         "Password Updated",
-        "Please signin again",
-        [
-          {
-            text: "OK",
-            onPress: async () => {
-              await AsyncStorage.removeItem("token"); // logout
-              router.replace("/signin");
-            },
-          },
-        ],
-        { cancelable: false }
+        "Your password has been changed successfully.",
+        [{ text: "OK", onPress: () => router.back() }]
       );
-    } catch (error) {
-      console.log("CHANGE PASSWORD ERROR 👉", error);
-      Alert.alert("Error", "Server not reachable");
+    } catch (err) {
+      console.log("CHANGE PASSWORD ERROR:", err.code);
+      const messages = {
+        "auth/wrong-password": "Current password is incorrect.",
+        "auth/invalid-credential": "Current password is incorrect.",
+        "auth/too-many-requests": "Too many attempts. Please try again later.",
+        "auth/weak-password": "New password must be at least 6 characters.",
+      };
+      Alert.alert("Error", messages[err.code] || "Failed to update password.");
     }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-[#f6f7fb] px-6 pt-6">
-      <Text className="text-xl font-bold text-gray-800 mb-6">
-        Change Password
-      </Text>
+      <Text className="text-xl font-bold text-gray-800 mb-6">Change Password</Text>
 
       <TextInput
         placeholder="Current Password"
@@ -87,7 +72,6 @@ export default function ChangePassword() {
         onChangeText={setCurrentPassword}
         className="bg-white p-3 rounded-2xl shadow mb-4"
       />
-
       <TextInput
         placeholder="New Password"
         secureTextEntry
@@ -95,7 +79,6 @@ export default function ChangePassword() {
         onChangeText={setNewPassword}
         className="bg-white p-3 rounded-2xl shadow mb-4"
       />
-
       <TextInput
         placeholder="Confirm New Password"
         secureTextEntry
@@ -108,9 +91,7 @@ export default function ChangePassword() {
         onPress={handleChangePassword}
         className="bg-blue-500 p-4 rounded-2xl items-center"
       >
-        <Text className="text-white font-semibold text-base">
-          Update Password
-        </Text>
+        <Text className="text-white font-semibold text-base">Update Password</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

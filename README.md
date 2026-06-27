@@ -1,6 +1,30 @@
-# Sheherly — Your Jaipur City Guide 🏯
+# Sheherly — Explore Like a Local 🏯
 
 A React Native (Expo) mobile app that helps tourists and locals explore Jaipur. It covers food & dining, accommodation, transportation, medical services, local services, famous spots, safety, an AI chatbot guide, and offline bookmarking.
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="assets/APP_IMG/1.png" width="22%" alt="Screen 1" />
+  &nbsp;
+  <img src="assets/APP_IMG/2.1.png" width="22%" alt="Screen 2.1" />
+  &nbsp;
+  <img src="assets/APP_IMG/2.png" width="22%" alt="Screen 2" />
+  &nbsp;
+  <img src="assets/APP_IMG/3.png" width="22%" alt="Screen 3" />
+</p>
+
+<p align="center">
+  <img src="assets/APP_IMG/4.png" width="22%" alt="Screen 4" />
+  &nbsp;
+  <img src="assets/APP_IMG/5.png" width="22%" alt="Screen 5" />
+  &nbsp;
+  <img src="assets/APP_IMG/6.png" width="22%" alt="Screen 6" />
+  &nbsp;
+  <img src="assets/APP_IMG/7.png" width="22%" alt="Screen 7" />
+</p>
 
 ---
 

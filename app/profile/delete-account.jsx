@@ -1,12 +1,17 @@
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-
-const BASE_URL = "http://10.253.101.139:5000";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  deleteUser,
+} from "firebase/auth";
+import { doc, deleteDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
 export default function DeleteAccount() {
+  const [password, setPassword] = useState("");
   const [confirmText, setConfirmText] = useState("");
   const router = useRouter();
 
@@ -15,35 +20,39 @@ export default function DeleteAccount() {
       Alert.alert("Error", "Type DELETE to confirm");
       return;
     }
+    if (!password) {
+      Alert.alert("Error", "Please enter your password to confirm");
+      return;
+    }
 
     try {
-      const token = await AsyncStorage.getItem("token");
-
-      const res = await fetch(`${BASE_URL}/api/auth/delete-account`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        Alert.alert("Error", data.message || "Delete failed");
+      const user = auth.currentUser;
+      if (!user) {
+        router.replace("/signin");
         return;
       }
 
-     
-      await AsyncStorage.removeItem("token");
+      // Re-authenticate before deleting
+      const credential = EmailAuthProvider.credential(user.email, password);
+      await reauthenticateWithCredential(user, credential);
 
-      Alert.alert("Account Deleted", "Your account has been deleted", [
-        {
-          text: "OK",
-          onPress: () => router.replace("/signup"),
-        },
+      // Delete Firestore profile doc
+      await deleteDoc(doc(db, "users", user.uid));
+
+      // Delete Firebase Auth account
+      await deleteUser(user);
+
+      Alert.alert("Account Deleted", "Your account has been permanently deleted.", [
+        { text: "OK", onPress: () => router.replace("/signup") },
       ]);
-    } catch (error) {
-      Alert.alert("Error", "Server not reachable");
+    } catch (err) {
+      console.log("DELETE ACCOUNT ERROR:", err.code);
+      const messages = {
+        "auth/wrong-password": "Incorrect password.",
+        "auth/invalid-credential": "Incorrect password.",
+        "auth/too-many-requests": "Too many attempts. Please try again later.",
+      };
+      Alert.alert("Error", messages[err.code] || "Failed to delete account.");
     }
   };
 
@@ -52,23 +61,28 @@ export default function DeleteAccount() {
       <Text className="text-xl font-bold text-gray-800 mb-4 text-center">
         Delete Account
       </Text>
-
       <Text className="text-sm text-gray-500 text-center mb-4">
         This action is permanent and cannot be undone.
       </Text>
 
       <View className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
         <Text className="text-red-700 text-sm">
-          • Your profile will be deleted{"\n"}
-          • You will lose all data{"\n"}
+          • Your profile will be permanently deleted{"\n"}
+          • You will lose all saved data{"\n"}
           • This cannot be recovered
         </Text>
       </View>
 
-      <Text className="text-sm text-gray-600 mb-2">
-        Type DELETE to confirm
-      </Text>
+      <Text className="text-sm text-gray-600 mb-2">Enter your password</Text>
+      <TextInput
+        value={password}
+        onChangeText={setPassword}
+        placeholder="Your password"
+        secureTextEntry
+        className="bg-white p-3 rounded-2xl shadow mb-4"
+      />
 
+      <Text className="text-sm text-gray-600 mb-2">Type DELETE to confirm</Text>
       <TextInput
         value={confirmText}
         onChangeText={setConfirmText}
@@ -83,11 +97,8 @@ export default function DeleteAccount() {
           confirmText === "DELETE" ? "bg-red-600" : "bg-red-300"
         }`}
       >
-        <Text className="text-white font-semibold">
-          Permanently Delete Account
-        </Text>
+        <Text className="text-white font-semibold">Permanently Delete Account</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 }
-

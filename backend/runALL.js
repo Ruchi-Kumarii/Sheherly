@@ -28,14 +28,6 @@ function runProcess(name, command, args, cwd) {
 // Start all your backends
 // =========================
 
-// 1. SigninSignup backend
-runProcess(
-  "SigninSignup Backend",
-  "node",
-  ["server.js"],
-  path.join(__dirname, "SigninSignup")
-);
-
 
 // 3. Admin backend
 runProcess(
