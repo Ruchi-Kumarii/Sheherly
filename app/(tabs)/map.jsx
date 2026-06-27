@@ -2,7 +2,7 @@ import polyline from "@mapbox/polyline";
 import * as Location from "expo-location";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Alert, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from "react-native";
-import MapView, { Marker, Polyline } from "react-native-maps";
+import MapView, { Marker, Polyline, PROVIDER_DEFAULT } from "react-native-maps";
 import { useLocalSearchParams, useFocusEffect, useRouter } from "expo-router";
 import { MAP_URL } from '../../config';
 import { saveMapLocation, loadMapLocations, removeMapLocation } from "../../hooks/useOfflineCache";
@@ -345,6 +345,7 @@ export default function Map() {
       {/* ── Map ── */}
       <MapView
         ref={mapRef}
+        provider={PROVIDER_DEFAULT}
         style={{ flex: 1 }}
         initialRegion={{
           ...userLocation,
