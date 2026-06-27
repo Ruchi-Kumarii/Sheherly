@@ -6,14 +6,40 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
+import { useEffect, useState } from "react";
 const logo = require("../assets/images/sheherlyTitle.png");
 
 export default function Index() {
   const router = useRouter();
+  const [checking, setChecking] = useState(true);
+
+  // Check if user is already logged in on app start
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Session exists — skip welcome screen
+        router.replace("/home");
+      } else {
+        // No session — show welcome screen
+        setChecking(false);
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  // Show spinner while checking auth state
+  if (checking) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "white" }}>
+        <ActivityIndicator size="large" color="#218fb4" />
+      </View>
+    );
+  }
 
   const handleGuestUser = async () => {
     try {
