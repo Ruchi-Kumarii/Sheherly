@@ -6,7 +6,7 @@ import { dirname, join } from "path";
 import nodemailer from "nodemailer";
 import dataRoutes from "./routes/dataRoutes.js";
 
-// Load shared .env from backend/
+// Load .env — works locally (backend/.env); on Render, env vars are injected by the platform
 const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(__dirname, "../.env") });
 
