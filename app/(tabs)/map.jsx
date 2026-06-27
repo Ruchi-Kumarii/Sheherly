@@ -1,17 +1,18 @@
 import polyline from "@mapbox/polyline";
 import * as Location from "expo-location";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Alert, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from "react-native";
-import MapView, { Marker, Polyline, PROVIDER_DEFAULT } from "react-native-maps";
+import {
+  Alert, Text, TextInput, TouchableOpacity,
+  View, ActivityIndicator,
+} from "react-native";
+import { WebView } from "react-native-webview";
 import { useLocalSearchParams, useFocusEffect, useRouter } from "expo-router";
-import { MAP_URL } from '../../config';
-import { saveMapLocation, loadMapLocations, removeMapLocation } from "../../hooks/useOfflineCache";
+import { MAP_URL } from "../../config";
+import { saveMapLocation } from "../../hooks/useOfflineCache";
 import { auth } from "../../firebase";
 
-const BASE_URL = MAP_URL;
-
 export default function Map() {
-  const mapRef = useRef(null);
+  const webRef = useRef(null);
   const router = useRouter();
   const { destLat, destLng, destName } = useLocalSearchParams();
 
@@ -23,13 +24,13 @@ export default function Map() {
   const [search, setSearch] = useState("");
   const [searching, setSearching] = useState(false);
   const [routing, setRouting] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
 
-  // Local flag — true only when actively showing a listing destination
   const [fromListing, setFromListing] = useState(false);
   const [listingName, setListingName] = useState("");
   const [locationSaved, setLocationSaved] = useState(false);
 
-  // Reset everything when screen loses focus
+  // Reset on screen blur
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -45,7 +46,7 @@ export default function Map() {
     }, [])
   );
 
-  // Get user location once
+  // Get user location
   useEffect(() => {
     (async () => {
       try {
@@ -62,13 +63,19 @@ export default function Map() {
           longitude: loc.coords.longitude,
         });
       } catch (err) {
-        console.log("LOCATION ERROR:", err);
-        Alert.alert("Location Error", "Could not get your location. Please enable GPS and try again.");
+        Alert.alert("Location Error", "Could not get your location. Please enable GPS.");
       }
     })();
   }, []);
 
-  // When opened from a listing — set destination and flag
+  // Send user location to map once both are ready
+  useEffect(() => {
+    if (mapReady && userLocation) {
+      sendToMap({ type: "SET_USER", lat: userLocation.latitude, lng: userLocation.longitude });
+    }
+  }, [mapReady, userLocation]);
+
+  // Handle listing destination
   useEffect(() => {
     if (destLat && destLng && destLat !== "undefined" && destLng !== "undefined") {
       const lat = parseFloat(destLat);
@@ -82,55 +89,63 @@ export default function Map() {
           : "Destination";
         setListingName(name);
         setLocationSaved(false);
-        mapRef.current?.animateToRegion(
-          { ...place, latitudeDelta: 0.05, longitudeDelta: 0.05 },
-          1000
-        );
       }
     }
   }, [destLat, destLng, destName]);
 
-  // Auto-find route once we have both user location and listing destination
+  // Auto-route when opened from listing
   useEffect(() => {
     if (fromListing && userLocation && destination) {
       findRoute(userLocation, destination);
     }
   }, [fromListing, userLocation, destination]);
 
+  // Send destination marker to map
+  useEffect(() => {
+    if (mapReady && destination) {
+      sendToMap({
+        type: "SET_DESTINATION",
+        lat: destination.latitude,
+        lng: destination.longitude,
+        name: listingName || search || "Destination",
+      });
+    }
+  }, [mapReady, destination]);
+
+  // Send route polyline to map
+  useEffect(() => {
+    if (mapReady && routeCoords.length > 0) {
+      sendToMap({ type: "SET_ROUTE", coords: routeCoords });
+    }
+  }, [mapReady, routeCoords]);
+
+  const sendToMap = (data) => {
+    webRef.current?.injectJavaScript(
+      `window.handleMessage(${JSON.stringify(data)}); true;`
+    );
+  };
+
   const searchPlace = async () => {
     if (!search.trim()) {
       Alert.alert("Enter a place", "Please type a location to search.");
       return;
     }
-
     setSearching(true);
     setRouteCoords([]);
     setDistance(null);
     setDuration(null);
-
     try {
       const res = await fetch(
-        `${BASE_URL}/api/search?place=${encodeURIComponent(search)}`
+        `${MAP_URL}/api/search?place=${encodeURIComponent(search)}`
       );
       const data = await res.json();
-
       if (!data.success || !data.data) {
         Alert.alert("Not found", data.error || "Could not find that place.");
         return;
       }
-
-      const place = {
-        latitude: data.data.latitude,
-        longitude: data.data.longitude,
-      };
-
+      const place = { latitude: data.data.latitude, longitude: data.data.longitude };
       setDestination(place);
-      mapRef.current?.animateToRegion(
-        { ...place, latitudeDelta: 0.05, longitudeDelta: 0.05 },
-        1000
-      );
     } catch (err) {
-      console.log("SEARCH ERROR:", err);
       Alert.alert("Search Error", "Could not reach map server.");
     } finally {
       setSearching(false);
@@ -140,51 +155,30 @@ export default function Map() {
   const findRoute = async (from, to) => {
     const source = from || userLocation;
     const dest = to || destination;
-
     if (!source || !dest) {
       Alert.alert("Missing location", "Search a destination first.");
       return;
     }
-
     setRouting(true);
     try {
-      const res = await fetch(`${BASE_URL}/api/route`, {
+      const res = await fetch(`${MAP_URL}/api/route`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ source, destination: dest, mode: "car" }),
       });
-
       const data = await res.json();
-
       if (!data.success || !data.data?.polyline) {
         Alert.alert("Route Error", data.error || "Could not get route.");
         return;
       }
-
       setDistance(data.data.distance);
       setDuration(data.data.duration);
-
       const decoded = polyline.decode(data.data.polyline).map(([lat, lng]) => ({
         latitude: lat,
         longitude: lng,
       }));
-
       setRouteCoords(decoded);
-
-      if (mapRef.current) {
-        mapRef.current.fitToCoordinates(
-          [
-            { latitude: source.latitude, longitude: source.longitude },
-            { latitude: dest.latitude, longitude: dest.longitude },
-          ],
-          {
-            edgePadding: { top: 200, right: 60, bottom: 160, left: 60 },
-            animated: true,
-          }
-        );
-      }
     } catch (err) {
-      console.log("ROUTE ERROR:", err);
       Alert.alert("Route Error", "Could not reach map server.");
     } finally {
       setRouting(false);
@@ -193,14 +187,10 @@ export default function Map() {
 
   const handleSaveLocation = async () => {
     if (!auth.currentUser) {
-      Alert.alert(
-        "Sign in required",
-        "You need to be signed in to save map locations for offline use.",
-        [
-          { text: "Cancel", style: "cancel" },
-          { text: "Sign In", onPress: () => router.push("/signin") },
-        ]
-      );
+      Alert.alert("Sign in required", "You need to be signed in to save map locations.", [
+        { text: "Cancel", style: "cancel" },
+        { text: "Sign In", onPress: () => router.push("/signin") },
+      ]);
       return;
     }
     if (!destination) return;
@@ -211,6 +201,74 @@ export default function Map() {
     });
     if (saved) setLocationSaved(true);
   };
+
+  // Leaflet HTML
+  const leafletHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body, #map { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    var map = L.map('map', { zoomControl: true }).setView([26.9124, 75.7873], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    var userMarker = null;
+    var destMarker = null;
+    var routeLine = null;
+
+    window.handleMessage = function(data) {
+      if (data.type === 'SET_USER') {
+        if (userMarker) map.removeLayer(userMarker);
+        var icon = L.divIcon({
+          className: '',
+          html: '<div style="width:16px;height:16px;background:#218fb4;border:3px solid white;border-radius:50%;box-shadow:0 0 6px rgba(0,0,0,0.4)"></div>',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
+        });
+        userMarker = L.marker([data.lat, data.lng], { icon: icon })
+          .addTo(map)
+          .bindPopup('You are here');
+        map.setView([data.lat, data.lng], 14);
+      }
+
+      if (data.type === 'SET_DESTINATION') {
+        if (destMarker) map.removeLayer(destMarker);
+        destMarker = L.marker([data.lat, data.lng])
+          .addTo(map)
+          .bindPopup(data.name)
+          .openPopup();
+        map.setView([data.lat, data.lng], 14);
+      }
+
+      if (data.type === 'SET_ROUTE') {
+        if (routeLine) map.removeLayer(routeLine);
+        var latlngs = data.coords.map(function(c) { return [c.latitude, c.longitude]; });
+        routeLine = L.polyline(latlngs, { color: '#218fb4', weight: 4 }).addTo(map);
+        map.fitBounds(routeLine.getBounds(), { padding: [60, 60] });
+      }
+
+      if (data.type === 'CLEAR') {
+        if (destMarker) { map.removeLayer(destMarker); destMarker = null; }
+        if (routeLine) { map.removeLayer(routeLine); routeLine = null; }
+      }
+    };
+  </script>
+</body>
+</html>
+`;
 
   if (!userLocation) {
     return (
@@ -224,49 +282,33 @@ export default function Map() {
   return (
     <View style={{ flex: 1 }}>
 
-      {/* ── Top Panel ── */}
+      {/* Top Panel */}
       <View style={{
         position: "absolute", top: 36, left: 12, right: 12, zIndex: 10,
-        backgroundColor: "white",
-        borderRadius: 16,
-        padding: 14,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        elevation: 6,
+        backgroundColor: "white", borderRadius: 16, padding: 14,
+        shadowColor: "#000", shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15, shadowRadius: 8, elevation: 6,
       }}>
-
         {fromListing ? (
-          /* Listing mode — destination label only */
           <View>
             <View style={{
               flexDirection: "row", alignItems: "center",
-              backgroundColor: "#f0f9ff",
-              borderRadius: 10, paddingHorizontal: 12, paddingVertical: 10,
-              marginBottom: 8,
+              backgroundColor: "#f0f9ff", borderRadius: 10,
+              paddingHorizontal: 12, paddingVertical: 10, marginBottom: 8,
             }}>
               <Text style={{ fontSize: 18, marginRight: 8 }}>📍</Text>
               <Text style={{ fontSize: 15, fontWeight: "600", color: "#1a1a1a", flex: 1 }}
-                numberOfLines={1}>
-                {listingName}
-              </Text>
+                numberOfLines={1}>{listingName}</Text>
               {routing && <ActivityIndicator size="small" color="#218fb4" />}
             </View>
-            {/* Save location button */}
             <TouchableOpacity
               onPress={handleSaveLocation}
               disabled={locationSaved}
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
+                flexDirection: "row", alignItems: "center", justifyContent: "center",
                 backgroundColor: locationSaved ? "#d1fae5" : "#085a73",
-                borderRadius: 10,
-                paddingVertical: 9,
-                gap: 6,
-              }}
-            >
+                borderRadius: 10, paddingVertical: 9, gap: 6,
+              }}>
               <Text style={{ fontSize: 15 }}>{locationSaved ? "✅" : "🔖"}</Text>
               <Text style={{ color: locationSaved ? "#065f46" : "white", fontWeight: "600", fontSize: 13 }}>
                 {locationSaved ? "Location Saved" : "Save for Offline"}
@@ -274,14 +316,11 @@ export default function Map() {
             </TouchableOpacity>
           </View>
         ) : (
-          /* Manual search mode */
           <>
-            {/* Search input */}
             <View style={{
               flexDirection: "row", alignItems: "center",
-              backgroundColor: "#f5f5f5",
-              borderRadius: 10, paddingHorizontal: 12,
-              marginBottom: 10, 
+              backgroundColor: "#f5f5f5", borderRadius: 10,
+              paddingHorizontal: 12, marginBottom: 10,
             }}>
               <Text style={{ fontSize: 16, marginRight: 8 }}>🔍</Text>
               <TextInput
@@ -291,35 +330,31 @@ export default function Map() {
                 onChangeText={setSearch}
                 onSubmitEditing={searchPlace}
                 returnKeyType="search"
-                style={{
-                  flex: 1, paddingVertical: 11,
-                  fontSize: 14, color: "#1a1a1a",
-                }}
+                style={{ flex: 1, paddingVertical: 11, fontSize: 14, color: "#1a1a1a" }}
               />
               {search.length > 0 && (
-                <TouchableOpacity onPress={() => { setSearch(""); setDestination(null); }}>
+                <TouchableOpacity onPress={() => {
+                  setSearch("");
+                  setDestination(null);
+                  sendToMap({ type: "CLEAR" });
+                }}>
                   <Text style={{ fontSize: 16, color: "#aaa", paddingLeft: 8 }}>✕</Text>
                 </TouchableOpacity>
               )}
             </View>
-
-            {/* Buttons row */}
             <View style={{ flexDirection: "row", gap: 10 }}>
               <TouchableOpacity
                 onPress={searchPlace}
                 disabled={searching}
                 style={{
-                  flex: 1, backgroundColor: "#218fb4",
-                  borderRadius: 10, paddingVertical: 11,
-                  alignItems: "center", justifyContent: "center",
+                  flex: 1, backgroundColor: "#218fb4", borderRadius: 10,
+                  paddingVertical: 11, alignItems: "center", justifyContent: "center",
                   flexDirection: "row", gap: 6,
                 }}>
                 {searching
                   ? <ActivityIndicator size="small" color="#fff" />
-                  : <Text style={{ color: "white", fontWeight: "600", fontSize: 14 }}>Search</Text>
-                }
+                  : <Text style={{ color: "white", fontWeight: "600", fontSize: 14 }}>Search</Text>}
               </TouchableOpacity>
-
               <TouchableOpacity
                 onPress={() => findRoute()}
                 disabled={routing || !destination}
@@ -334,46 +369,24 @@ export default function Map() {
                   ? <ActivityIndicator size="small" color="#fff" />
                   : <Text style={{ color: "white", fontWeight: "600", fontSize: 14 }}>
                       {routeCoords.length > 0 ? "Re-route" : "Get Route"}
-                    </Text>
-                }
+                    </Text>}
               </TouchableOpacity>
             </View>
           </>
         )}
       </View>
 
-      {/* ── Map ── */}
-      <MapView
-        ref={mapRef}
-        provider={PROVIDER_DEFAULT}
+      {/* Leaflet WebView */}
+      <WebView
+        ref={webRef}
+        originWhitelist={["*"]}
+        source={{ html: leafletHTML }}
         style={{ flex: 1 }}
-        initialRegion={{
-          ...userLocation,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }}
-        showsUserLocation
-        zoomControlEnabled
-        showsCompass={false}
-        showsMyLocationButton={false}
-      >
-        {destination && (
-          <Marker
-            coordinate={destination}
-            title={listingName || search || "Destination"}
-          />
-        )}
+        javaScriptEnabled
+        onLoad={() => setMapReady(true)}
+      />
 
-        {routeCoords.length > 0 && (
-          <Polyline
-            coordinates={routeCoords}
-            strokeWidth={4}
-            strokeColor="#218fb4"
-          />
-        )}
-      </MapView>
-
-      {/* ── Distance / Duration Banner ── */}
+      {/* Distance / Duration Banner */}
       {distance && duration && (
         <View style={{
           position: "absolute", bottom: 24, left: 12, right: 12,
