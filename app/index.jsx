@@ -21,6 +21,7 @@ const LAST_USER_KEY = "sheherly_last_user_uid";
 export default function Index() {
   const router = useRouter();
   const [checking, setChecking] = useState(true);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
     const bootstrap = async () => {
@@ -29,27 +30,23 @@ export default function Index() {
       const isOnline = net.isConnected && net.isInternetReachable !== false;
 
       if (!isOnline) {
-        // Offline — check if a user was previously logged in
         const lastUid = await AsyncStorage.getItem(LAST_USER_KEY);
         if (lastUid) {
-          // Had a session before — go to home, app handles offline state there
+          setRedirecting(true);
           router.replace("/home");
         } else {
-          // Never logged in — show welcome screen
           setChecking(false);
         }
         return;
       }
 
-      // Online — use Firebase auth state
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
         unsubscribe();
         if (user) {
-          // Persist UID for offline fallback
           await AsyncStorage.setItem(LAST_USER_KEY, user.uid);
+          setRedirecting(true);
           router.replace("/home");
         } else {
-          // Clear stored UID on explicit logout
           await AsyncStorage.removeItem(LAST_USER_KEY);
           setChecking(false);
         }
@@ -59,6 +56,10 @@ export default function Index() {
     bootstrap();
   }, []);
 
+  // Show nothing while redirecting (no flash)
+  if (redirecting) return null;
+
+  // Show spinner only while checking
   if (checking) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "white" }}>

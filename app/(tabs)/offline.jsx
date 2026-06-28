@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   loadAllOfflineItems,
   removeOfflineItem,
@@ -18,6 +18,9 @@ import {
 } from "../../hooks/useOfflineCache";
 import { useNetworkStatus } from "../../hooks/useNetworkStatus";
 import { auth } from "../../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const LAST_USER_KEY = "sheherly_last_user_uid";
 
 // ─── Category accent styles ───────────────────────────────────────────────────
 const CATEGORY_STYLES = {
@@ -92,11 +95,24 @@ function AuthWall() {
 export default function OfflineScreen() {
   const router = useRouter();
   const { isOnline } = useNetworkStatus();
-  const isGuest = !auth.currentUser;
 
+  // Consider logged in if Firebase has a user OR AsyncStorage has a cached UID
+  const [isGuest, setIsGuest] = useState(true);
   const [savedItems, setSavedItems] = useState([]);
   const [savedMaps, setSavedMaps] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (auth.currentUser) {
+        setIsGuest(false);
+      } else {
+        const uid = await AsyncStorage.getItem(LAST_USER_KEY);
+        setIsGuest(!uid);
+      }
+    };
+    checkAuth();
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
