@@ -12,27 +12,53 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { useEffect, useState } from "react";
+import NetInfo from "@react-native-community/netinfo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const logo = require("../assets/images/sheherlyTitle.png");
+
+const LAST_USER_KEY = "sheherly_last_user_uid";
 
 export default function Index() {
   const router = useRouter();
   const [checking, setChecking] = useState(true);
 
-  // Check if user is already logged in on app start
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // Session exists — skip welcome screen
-        router.replace("/home");
-      } else {
-        // No session — show welcome screen
-        setChecking(false);
+    const bootstrap = async () => {
+      // Check network first
+      const net = await NetInfo.fetch();
+      const isOnline = net.isConnected && net.isInternetReachable !== false;
+
+      if (!isOnline) {
+        // Offline — check if a user was previously logged in
+        const lastUid = await AsyncStorage.getItem(LAST_USER_KEY);
+        if (lastUid) {
+          // Had a session before — go to home, app handles offline state there
+          router.replace("/home");
+        } else {
+          // Never logged in — show welcome screen
+          setChecking(false);
+        }
+        return;
       }
-    });
-    return unsubscribe;
+
+      // Online — use Firebase auth state
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        unsubscribe();
+        if (user) {
+          // Persist UID for offline fallback
+          await AsyncStorage.setItem(LAST_USER_KEY, user.uid);
+          router.replace("/home");
+        } else {
+          // Clear stored UID on explicit logout
+          await AsyncStorage.removeItem(LAST_USER_KEY);
+          setChecking(false);
+        }
+      });
+    };
+
+    bootstrap();
   }, []);
 
-  // Show spinner while checking auth state
   if (checking) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "white" }}>

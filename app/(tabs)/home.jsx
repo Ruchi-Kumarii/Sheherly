@@ -1,16 +1,18 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from "expo-router";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNetworkStatus } from '../../hooks/useNetworkStatus';
 const logo = require("../../assets/images/sheherlyTitle.png")
 
 export default function Home() {
   const router = useRouter();
+  const { isOnline } = useNetworkStatus();
+
   return (
     <SafeAreaView
       style={{ backgroundColor: "white", paddingTop: 0 }}
       className="flex-1"
     >
-
       <View className="flex items-center justify-start pt-5">
         <View className="bg-white w-full justify-center items-center flex flex-row p-1 border border-[#9fd5efff]"
           style={{ borderRadius: 20 }}>
@@ -18,7 +20,44 @@ export default function Home() {
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} >
+      {/* No internet banner */}
+      {!isOnline && (
+        <View style={{
+          backgroundColor: "#fff7ed",
+          borderColor: "#fb923c",
+          borderWidth: 1,
+          marginHorizontal: 16,
+          marginTop: 10,
+          borderRadius: 12,
+          paddingHorizontal: 14,
+          paddingVertical: 10,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 8,
+        }}>
+          <Text style={{ fontSize: 18 }}>📡</Text>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: "#9a3412", fontWeight: "700", fontSize: 13 }}>
+              No Internet Connection
+            </Text>
+            <Text style={{ color: "#c2410c", fontSize: 12, marginTop: 2 }}>
+              Only your saved offline items are available.
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => router.push("/(tabs)/offline")}
+            style={{
+              backgroundColor: "#ea580c",
+              borderRadius: 8,
+              paddingHorizontal: 10,
+              paddingVertical: 6,
+            }}>
+            <Text style={{ color: "white", fontSize: 11, fontWeight: "700" }}>View Saved</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      <ScrollView showsVerticalScrollIndicator={false}>
 
 
         {/* Food and Dining */}
