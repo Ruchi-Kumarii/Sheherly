@@ -11,7 +11,7 @@ const ONBOARDING_KEY = "sheherly_onboarding_done";
 const slides = [
   {
     id: "1",
-    image: require("../assets/images/intro1.png"),
+    image: require("../assets/images/sheherlyTitle.png"),
     bg: "#e8f4f8",
     accent: "#085a73",
   },
