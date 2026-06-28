@@ -2,6 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, TextInput, Linking } from "re
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 
 const medicalOptions = [
   { id: "1", name: "Hospitals", slug: "hospitals", emoji: "🏥", desc: "24/7 emergency care" },
@@ -39,8 +40,10 @@ export default function MedicalServicesPage() {
               activeOpacity={0.85}
               onPress={() => {
                 if (item.slug === "ambulance") {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
                   Linking.openURL("tel:108");
                 } else {
+                  Haptics.selectionAsync();
                   router.push(`/category/medical/${item.slug}`);
                 }
               }}

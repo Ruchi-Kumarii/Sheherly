@@ -1,8 +1,10 @@
-import { View, Text, FlatList, TouchableOpacity, Linking, Alert, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Linking, Alert, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ADMIN_URL } from "../../../config";
+import { ListingCardSkeleton } from "../../../components/SkeletonCard";
+import * as Haptics from "expo-haptics";
 
 const BASE_URL = ADMIN_URL;
 
@@ -12,6 +14,7 @@ export default function AccommodationTypePage() {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const openLink = async (url) => {
     const supported = await Linking.canOpenURL(url);
@@ -22,8 +25,10 @@ export default function AccommodationTypePage() {
     }
   };
 
-  const fetchAccommodationData = async () => {
+  const fetchAccommodationData = async (isRefresh = false) => {
     try {
+      if (isRefresh) setRefreshing(true);
+      else setLoading(true);
       const response = await fetch(`${BASE_URL}/api/admin/data/accommodation/${type}`);
       const json = await response.json();
       setData(json);
@@ -32,6 +37,7 @@ export default function AccommodationTypePage() {
       Alert.alert("Error", "Could not load accommodation data");
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -43,9 +49,14 @@ export default function AccommodationTypePage() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-[#f3f5f9]">
-        <ActivityIndicator size="large" color="#2563eb" />
-        <Text className="mt-3 text-gray-600">Loading...</Text>
+      <SafeAreaView className="flex-1 bg-[#f3f5f9]">
+        <View className="p-6">
+          <Text className="text-3xl font-bold capitalize text-gray-800">{type}</Text>
+          <Text className="text-sm text-gray-600 mt-1">Compare prices across platforms</Text>
+        </View>
+        <View className="px-4">
+          {[1, 2, 3].map((i) => <ListingCardSkeleton key={i} />)}
+        </View>
       </SafeAreaView>
     );
   }
@@ -67,6 +78,14 @@ export default function AccommodationTypePage() {
         data={data}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => fetchAccommodationData(true)}
+            colors={["#218fb4"]}
+            tintColor="#218fb4"
+          />
+        }
         renderItem={({ item }) => {
 
           const isPG = type === "pg";
@@ -89,12 +108,13 @@ export default function AccommodationTypePage() {
               </Text>
 
               <TouchableOpacity
-                onPress={() =>
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   router.push({
                     pathname: "/map",
                     params: { destLat: item.lat, destLng: item.lng, destName: item.name },
-                  })
-                }
+                  });
+                }}
                 className="mt-2 bg-gray-200 px-3 py-2 rounded-lg"
               >
                 <Text className="text-center text-sm">View Location</Text>
@@ -102,7 +122,10 @@ export default function AccommodationTypePage() {
 
               {isPG ? (
                 <TouchableOpacity
-                  onPress={() => openLink(`tel:${item.phone}`)}
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                    openLink(`tel:${item.phone}`);
+                  }}
                   className="mt-3 bg-green-500 px-3 py-2 rounded-lg"
                 >
                   <Text className="text-white text-center font-semibold">

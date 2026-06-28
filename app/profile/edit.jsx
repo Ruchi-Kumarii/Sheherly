@@ -7,12 +7,19 @@ import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
+import Toast from "../../components/Toast";
+import * as Haptics from "expo-haptics";
 
 export default function EditProfile() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState({ visible: false, message: "", type: "success" });
+
+  const showToast = (message, type = "success") => {
+    setToast({ visible: true, message, type });
+  };
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -41,11 +48,13 @@ export default function EditProfile() {
         phone: phone.trim(),
       });
 
-      Alert.alert("Profile updated ✅");
-      router.back();
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      showToast("Profile updated ✅");
+      setTimeout(() => router.back(), 1800);
     } catch (err) {
       console.log("UPDATE PROFILE ERROR:", err);
-      Alert.alert("Error", "Failed to update profile");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      showToast("Failed to update profile", "error");
     } finally {
       setLoading(false);
     }
@@ -53,6 +62,12 @@ export default function EditProfile() {
 
   return (
     <SafeAreaView className="flex-1 bg-[#f6f7fb]">
+      <Toast
+        message={toast.message}
+        visible={toast.visible}
+        type={toast.type}
+        onHide={() => setToast((t) => ({ ...t, visible: false }))}
+      />
       <ScrollView className="mx-6 mt-6" contentContainerStyle={{ paddingBottom: 40 }}>
         <Text className="text-xl font-bold text-gray-800 mb-6">Edit Profile</Text>
 

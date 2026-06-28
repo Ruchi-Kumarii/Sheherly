@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Haptics from "expo-haptics";
 
 const transportOptions = [
   {
@@ -64,12 +65,13 @@ export default function TransportationPage() {
               activeOpacity={0.85}
 
 
-              onPress={() =>
+              onPress={() => {
+                Haptics.selectionAsync();
                 router.push({
                   pathname: "/category/transportation/search",
                   params: { type: item.slug },
-                })
-              }
+                });
+              }}
 
               className="flex-row items-center bg-white p-4 rounded-2xl mb-3 shadow"
             >

@@ -5,12 +5,14 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
-  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { ADMIN_URL } from "../../../config";
+import { ListingCardSkeleton } from "../../../components/SkeletonCard";
+import * as Haptics from "expo-haptics";
 
 const BASE_URL = ADMIN_URL;
 
@@ -20,10 +22,12 @@ export default function FamousSpotTypePage() {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const fetchFamousSpots = async () => {
+  const fetchFamousSpots = async (isRefresh = false) => {
     try {
-      setLoading(true);
+      if (isRefresh) setRefreshing(true);
+      else setLoading(true);
 
       const response = await fetch(`${BASE_URL}/api/admin/data/famous/${slug}`);
       const json = await response.json();
@@ -43,6 +47,7 @@ export default function FamousSpotTypePage() {
       Alert.alert("Error", "Could not load famous spots");
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -54,9 +59,16 @@ export default function FamousSpotTypePage() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-[#f6f7fb] justify-center items-center">
-        <ActivityIndicator size="large" color="#218fb4" />
-        <Text className="mt-3 text-gray-600">Loading famous spots...</Text>
+      <SafeAreaView className="flex-1 bg-[#f6f7fb]">
+        <View className="p-6">
+          <Text className="text-3xl font-bold capitalize text-gray-800">
+            {slug ? slug.replace(/-/g, " ") : "Famous Spots"}
+          </Text>
+          <Text className="text-sm text-gray-600 mt-1">Popular places in Jaipur</Text>
+        </View>
+        <View className="px-4">
+          {[1, 2, 3, 4].map((i) => <ListingCardSkeleton key={i} />)}
+        </View>
       </SafeAreaView>
     );
   }
@@ -78,6 +90,14 @@ export default function FamousSpotTypePage() {
         data={data}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => fetchFamousSpots(true)}
+            colors={["#218fb4"]}
+            tintColor="#218fb4"
+          />
+        }
         renderItem={({ item }) => (
           <View className="bg-white p-4 rounded-2xl mb-4 shadow">
 
@@ -93,12 +113,13 @@ export default function FamousSpotTypePage() {
 
             {/* Directions */}
             <TouchableOpacity
-              onPress={() =>
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 router.push({
                   pathname: "/map",
                   params: { destLat: item.lat, destLng: item.lng, destName: item.name },
-                })
-              }
+                });
+              }}
               className="mt-3 bg-blue-500 px-3 py-2 rounded-lg"
             >
               <Text className="text-white text-center text-sm">

@@ -5,12 +5,14 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
-  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { ADMIN_URL } from "../../../config";
+import { ListingCardSkeleton } from "../../../components/SkeletonCard";
+import * as Haptics from "expo-haptics";
 
 const BASE_URL = ADMIN_URL;
 
@@ -21,37 +23,31 @@ export default function FoodTypePage() {
   const [data, setData] = useState([]);
   const [sortType, setSortType] = useState("");
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const fetchFoodData = async () => {
+  const fetchFoodData = async (isRefresh = false) => {
     try {
-      setLoading(true);
+      if (isRefresh) setRefreshing(true);
+      else setLoading(true);
 
       const response = await fetch(`${BASE_URL}/api/admin/data/food/${slug}`);
       const json = await response.json();
-
       setData(json || []);
     } catch (error) {
-      console.error("FOOD FETCH ERROR:", error);
       Alert.alert("Error", "Could not load food data");
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
-    if (slug) {
-      fetchFoodData();
-    }
+    if (slug) fetchFoodData();
   }, [slug]);
 
-  // Sort by rating
   const getSortedData = () => {
     let sorted = [...data];
-
-    if (sortType === "rating") {
-      sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    }
-
+    if (sortType === "rating") sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     return sorted;
   };
 
@@ -59,9 +55,16 @@ export default function FoodTypePage() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-[#f3f5f9] justify-center items-center">
-        <ActivityIndicator size="large" color="#218fb4" />
-        <Text className="mt-3 text-gray-600">Loading food places...</Text>
+      <SafeAreaView className="flex-1 bg-[#f3f5f9]">
+        <View className="p-6">
+          <Text className="text-3xl font-bold capitalize text-gray-800">
+            {slug ? slug.replace(/-/g, " ") : "Food"}
+          </Text>
+          <Text className="text-sm text-gray-600 mt-1">Explore food places</Text>
+        </View>
+        <View className="px-4">
+          {[1, 2, 3, 4].map((i) => <ListingCardSkeleton key={i} />)}
+        </View>
       </SafeAreaView>
     );
   }
@@ -69,23 +72,22 @@ export default function FoodTypePage() {
   return (
     <SafeAreaView className="flex-1 bg-[#f3f5f9]">
 
-      {/* HEADER */}
       <View className="p-6">
         <Text className="text-3xl font-bold capitalize text-gray-800">
           {slug ? slug.replace(/-/g, " ") : "Food"}
         </Text>
-        <Text className="text-sm text-gray-600 mt-1">
-          Explore food places
-        </Text>
+        <Text className="text-sm text-gray-600 mt-1">Explore food places</Text>
       </View>
 
-      {/* FILTER */}
       <View className="mb-4">
         <TouchableOpacity
-          onPress={() => setSortType("rating")}
-          className="bg-white px-4 py-2 rounded-lg shadow self-start ml-4"
+          onPress={() => {
+            Haptics.selectionAsync();
+            setSortType(sortType === "rating" ? "" : "rating");
+          }}
+          className={`px-4 py-2 rounded-lg shadow self-start ml-4 ${sortType === "rating" ? "bg-[#218fb4]" : "bg-white"}`}
         >
-          <Text>⭐ Top Rated</Text>
+          <Text className={sortType === "rating" ? "text-white font-semibold" : ""}>⭐ Top Rated</Text>
         </TouchableOpacity>
       </View>
 
@@ -93,35 +95,37 @@ export default function FoodTypePage() {
         data={finalData}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingHorizontal: 16 }}
-
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => fetchFoodData(true)}
+            colors={["#218fb4"]}
+            tintColor="#218fb4"
+          />
+        }
         renderItem={({ item }) => (
           <View className="bg-white p-4 rounded-2xl mb-4 shadow">
-
-
             <View className="flex-row justify-between items-center">
-              <Text className="text-lg font-semibold flex-1">
-                {item.name}
-              </Text>
-
+              <Text className="text-lg font-semibold flex-1">{item.name}</Text>
               <View className="flex-row items-center">
-
-
                 <TouchableOpacity
-                  onPress={() =>
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     router.push({
                       pathname: "/map",
                       params: { destLat: item.lat, destLng: item.lng, destName: item.name },
-                    })
-                  }
+                    });
+                  }}
                   className="ml-2"
                 >
                   <Text className="text-lg">📍</Text>
                 </TouchableOpacity>
-
-
                 {item.phone && item.phone !== "N/A" && (
                   <TouchableOpacity
-                    onPress={() => Linking.openURL(`tel:${item.phone}`)}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      Linking.openURL(`tel:${item.phone}`);
+                    }}
                     className="ml-3"
                   >
                     <Text className="text-lg">📞</Text>
@@ -130,48 +134,40 @@ export default function FoodTypePage() {
               </View>
             </View>
 
-
             <Text className="text-sm text-gray-500 mt-1">
               {item.location} · ⭐ {item.rating || 0}
             </Text>
-
             {item.timings && (
-              <Text className="text-sm text-gray-500 mt-1">
-                🕒 {item.timings}
-              </Text>
+              <Text className="text-sm text-gray-500 mt-1">🕒 {item.timings}</Text>
             )}
-
             {item.zomato && (
               <TouchableOpacity
                 onPress={() => Linking.openURL(item.zomato)}
                 className="mt-3 bg-red-200 px-3 py-2 rounded-lg"
               >
                 <Text className="text-center text-red-800 font-medium">
-                  🍽️ Zomato
-                  {item.zomatoPrice ? ` · ${item.zomatoPrice}` : ""}
+                  🍽️ Zomato{item.zomatoPrice ? ` · ${item.zomatoPrice}` : ""}
                 </Text>
               </TouchableOpacity>
             )}
-
-
             {item.swiggy && (
               <TouchableOpacity
                 onPress={() => Linking.openURL(item.swiggy)}
                 className="mt-2 bg-orange-200 px-3 py-2 rounded-lg"
               >
                 <Text className="text-center text-orange-800 font-medium">
-                  🛵 Swiggy
-                  {item.swiggyPrice ? ` · ${item.swiggyPrice}` : ""}
+                  🛵 Swiggy{item.swiggyPrice ? ` · ${item.swiggyPrice}` : ""}
                 </Text>
               </TouchableOpacity>
             )}
           </View>
         )}
-
         ListEmptyComponent={
-          <Text className="text-center text-gray-500 mt-10">
-            No places found 😕
-          </Text>
+          <View className="items-center justify-center mt-16 px-8">
+            <Text className="text-5xl mb-4">😕</Text>
+            <Text className="text-lg font-bold text-gray-700 mb-2">No places found</Text>
+            <Text className="text-sm text-gray-400 text-center">Pull down to refresh or try another category.</Text>
+          </View>
         }
       />
     </SafeAreaView>

@@ -14,6 +14,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { saveOfflineData, loadOfflineData } from "../../../hooks/useOfflineCache";
 import { useNetworkStatus } from "../../../hooks/useNetworkStatus";
+import * as Haptics from "expo-haptics";
 
 export default function Result() {
   const {
@@ -342,7 +343,10 @@ export default function Result() {
                   shadowRadius: 8,
                   elevation: 4,
                 }}
-                onPress={() => callDriver(item.contact_number)}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                  callDriver(item.contact_number);
+                }}
               >
                 <Text className="text-white font-bold text-sm tracking-wide">
                   📞 Call Now
@@ -456,25 +460,30 @@ export default function Result() {
                 <View className="flex-row justify-between">
                   <TouchableOpacity
                     className="bg-[#4F6EF7] px-4 py-3 rounded-xl flex-1 mr-2 items-center"
-                    onPress={() => Linking.openURL(`tel:${item.phone}`)}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                      Linking.openURL(`tel:${item.phone}`);
+                    }}
                   >
                     <Text className="text-white font-bold">📞 Call</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     className="bg-green-500 px-4 py-3 rounded-xl flex-1 mr-2 items-center"
-                    onPress={() =>
-                      Linking.openURL(`https://wa.me/91${item.whatsapp}`)
-                    }
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      Linking.openURL(`https://wa.me/91${item.whatsapp}`);
+                    }}
                   >
                     <Text className="text-white font-bold">💬 WhatsApp</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     className="bg-slate-700 px-4 py-3 rounded-xl flex-1 items-center"
-                    onPress={() =>
-                      router.push(`/(tabs)/map?destLat=${item.lat}&destLng=${item.lng}&destName=${encodeURIComponent(item.shop_name || item.name)}`)
-                    }
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      router.push(`/(tabs)/map?destLat=${item.lat}&destLng=${item.lng}&destName=${encodeURIComponent(item.shop_name || item.name)}`);
+                    }}
                   >
                     <Text className="text-white font-bold">📍 Map</Text>
                   </TouchableOpacity>
@@ -522,7 +531,10 @@ export default function Result() {
             shadowRadius: 8,
             elevation: 4,
           }}
-          onPress={() => setShowFilter(true)}
+          onPress={() => {
+            Haptics.selectionAsync();
+            setShowFilter(true);
+          }}
         >
           <Text className="text-white font-bold text-[13px] tracking-wide">
             ⚙️ Filters
@@ -641,7 +653,10 @@ export default function Result() {
                   shadowRadius: 10,
                   elevation: 5,
                 }}
-                onPress={() => setExpandedId(isOpen ? null : index)}
+                onPress={() => {
+                  Haptics.selectionAsync();
+                  setExpandedId(isOpen ? null : index);
+                }}
               >
                 <Text className="text-white font-extrabold text-[16px] tracking-wide">
                   {isOpen ? "Close ✕" : "Select Seats →"}
@@ -656,11 +671,12 @@ export default function Result() {
 
                   <TouchableOpacity
                     className="flex-row justify-between items-center py-3"
-                    onPress={() =>
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                       openWebsite(
                         `https://www.redbus.in/search?fromCityName=${item.from}&toCityName=${item.to}`
-                      )
-                    }
+                      );
+                    }}
                   >
                     <Text className="text-[15px] font-semibold text-slate-700">
                       RedBus
@@ -674,11 +690,12 @@ export default function Result() {
 
                   <TouchableOpacity
                     className="flex-row justify-between items-center py-3"
-                    onPress={() =>
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                       openWebsite(
                         `https://www.abhibus.com/bus-tickets/${item.from}-to-${item.to}`
-                      )
-                    }
+                      );
+                    }}
                   >
                     <Text className="text-[15px] font-semibold text-slate-700">
                       AbhiBus
@@ -717,7 +734,10 @@ export default function Result() {
                         ? "bg-indigo-50 border-[#4F6EF7]"
                         : "bg-white border-slate-200"
                       }`}
-                    onPress={() => setFilter(busType)}
+                    onPress={() => {
+                      Haptics.selectionAsync();
+                      setFilter(busType);
+                    }}
                   >
                     <Text
                       className={`font-semibold text-[14px] ${active ? "text-[#4F6EF7]" : "text-slate-500"
@@ -763,7 +783,10 @@ export default function Result() {
                 shadowRadius: 10,
                 elevation: 6,
               }}
-              onPress={() => setShowFilter(false)}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                setShowFilter(false);
+              }}
             >
               <Text className="text-white font-extrabold text-[17px] tracking-wide">
                 Apply Filters

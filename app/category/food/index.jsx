@@ -2,6 +2,7 @@ import { View, Text, ScrollView, TouchableOpacity, TextInput } from "react-nativ
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 
 const foodOptions = [
   {
@@ -61,9 +62,10 @@ export default function FoodPage() {
             <TouchableOpacity
               key={item.id}
               activeOpacity={0.85}
-              onPress={() =>
-                router.push(`/category/food/${item.slug}`)
-              }
+              onPress={() => {
+                Haptics.selectionAsync();
+                router.push(`/category/food/${item.slug}`);
+              }}
               className="flex-row items-center bg-white p-4 rounded-2xl mb-3 shadow"
             >
               <Text className="text-4xl mr-4">{item.emoji}</Text>

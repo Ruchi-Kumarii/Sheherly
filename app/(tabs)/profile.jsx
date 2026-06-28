@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
+import * as Haptics from "expo-haptics";
 
 const settingsOptions = [
   { id: "1", title: "Edit Profile", route: "edit" },
@@ -154,11 +155,12 @@ export default function Profile() {
                 <TouchableOpacity
                   key={option.id}
                   activeOpacity={0.8}
-                  onPress={() =>
+                  onPress={() => {
+                    Haptics.selectionAsync();
                     isExternal
                       ? router.push(option.route)
-                      : router.push(`/profile/${option.route}`)
-                  }
+                      : router.push(`/profile/${option.route}`);
+                  }}
                   className={`flex-row items-center p-4 rounded-2xl mb-4 shadow ${
                     option.danger ? "bg-red-50" : "bg-white"
                   }`}

@@ -5,12 +5,14 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
-  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { ADMIN_URL } from "../../../config";
+import { ListingCardSkeleton } from "../../../components/SkeletonCard";
+import * as Haptics from "expo-haptics";
 
 const BASE_URL = ADMIN_URL;
 
@@ -20,6 +22,7 @@ export default function LocalServiceTypePage() {
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Normalize Data
   const normalizeLocalServices = (rawData = []) => {
@@ -81,9 +84,10 @@ export default function LocalServiceTypePage() {
       .filter(Boolean);
   };
 
-  const fetchLocalServices = async () => {
+  const fetchLocalServices = async (isRefresh = false) => {
     try {
-      setLoading(true);
+      if (isRefresh) setRefreshing(true);
+      else setLoading(true);
 
       const response = await fetch(`${BASE_URL}/api/admin/data/local/${service}`);
       const json = await response.json();
@@ -95,6 +99,7 @@ export default function LocalServiceTypePage() {
       Alert.alert("Error", "Could not load local services");
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -106,9 +111,16 @@ export default function LocalServiceTypePage() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-[#f6f7fb] justify-center items-center">
-        <ActivityIndicator size="large" color="#218fb4" />
-        <Text className="mt-3 text-gray-600">Loading services...</Text>
+      <SafeAreaView className="flex-1 bg-[#f6f7fb]">
+        <View className="p-6">
+          <Text className="text-3xl font-bold capitalize text-gray-800">
+            {service ? service.replace(/-/g, " ") : "Local Services"}
+          </Text>
+          <Text className="text-sm text-gray-600 mt-1">Available services near you</Text>
+        </View>
+        <View className="px-4">
+          {[1, 2, 3, 4].map((i) => <ListingCardSkeleton key={i} />)}
+        </View>
       </SafeAreaView>
     );
   }
@@ -131,6 +143,14 @@ export default function LocalServiceTypePage() {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => fetchLocalServices(true)}
+            colors={["#218fb4"]}
+            tintColor="#218fb4"
+          />
+        }
         renderItem={({ item }) => (
           <View className="bg-white p-4 rounded-2xl mb-4 shadow">
 
@@ -151,12 +171,13 @@ export default function LocalServiceTypePage() {
             )}
 
             <TouchableOpacity
-              onPress={() =>
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 router.push({
                   pathname: "/map",
                   params: { destLat: item.lat, destLng: item.lng, destName: item.name },
-                })
-              }
+                });
+              }}
               className="mt-3 bg-blue-500 px-3 py-2 rounded-lg"
             >
               <Text className="text-white text-center text-sm">
@@ -166,7 +187,10 @@ export default function LocalServiceTypePage() {
 
             {item.phone && (
               <TouchableOpacity
-                onPress={() => Linking.openURL(`tel:${item.phone}`)}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  Linking.openURL(`tel:${item.phone}`);
+                }}
                 className="mt-2 bg-green-500 px-3 py-2 rounded-lg"
               >
                 <Text className="text-white text-center text-sm">

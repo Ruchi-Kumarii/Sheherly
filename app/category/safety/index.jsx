@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import { ADMIN_URL } from "../../../config";
+import * as Haptics from "expo-haptics";
 
 const BASE_URL = ADMIN_URL;
 
@@ -57,6 +58,7 @@ export default function SafetyPage() {
   }, []);
 
   const makeCall = (number) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     Linking.openURL(`tel:${number}`);
   };
 
@@ -107,7 +109,10 @@ export default function SafetyPage() {
           ))}
 
           <TouchableOpacity
-            onPress={() => setShowPolice(prev => !prev)}
+            onPress={() => {
+              Haptics.selectionAsync();
+              setShowPolice(prev => !prev);
+            }}
             className="h-20 rounded-2xl bg-orange-300 justify-center items-center mt-4 mb-6 px-4"
           >
             <Text className="text-xl font-semibold text-red-800 text-center">
@@ -135,12 +140,13 @@ export default function SafetyPage() {
                     </Text>
 
                     <TouchableOpacity
-                      onPress={() =>
+                      onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                         router.push({
                           pathname: "/map",
                           params: { destLat: item.lat, destLng: item.lng, destName: item.name },
-                        })
-                      }
+                        });
+                      }}
                       className="mt-3 bg-red-500 px-3 py-2 rounded-lg"
                     >
                       <Text className="text-white text-center text-sm">

@@ -14,6 +14,7 @@ import { auth } from "../firebase";
 import { useEffect, useState } from "react";
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Onboarding, { shouldShowOnboarding } from "../components/Onboarding";
 const logo = require("../assets/images/sheherlyTitle.png");
 
 const LAST_USER_KEY = "sheherly_last_user_uid";
@@ -22,10 +23,10 @@ export default function Index() {
   const router = useRouter();
   const [checking, setChecking] = useState(true);
   const [redirecting, setRedirecting] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     const bootstrap = async () => {
-      // Check network first
       const net = await NetInfo.fetch();
       const isOnline = net.isConnected && net.isInternetReachable !== false;
 
@@ -48,6 +49,9 @@ export default function Index() {
           router.replace("/home");
         } else {
           await AsyncStorage.removeItem(LAST_USER_KEY);
+          // Check if first time user
+          const needsOnboarding = await shouldShowOnboarding();
+          setShowOnboarding(needsOnboarding);
           setChecking(false);
         }
       });
@@ -56,16 +60,19 @@ export default function Index() {
     bootstrap();
   }, []);
 
-  // Show nothing while redirecting (no flash)
   if (redirecting) return null;
 
-  // Show spinner only while checking
   if (checking) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "white" }}>
         <ActivityIndicator size="large" color="#218fb4" />
       </View>
     );
+  }
+
+  // Show onboarding for first-time users
+  if (showOnboarding) {
+    return <Onboarding onDone={() => setShowOnboarding(false)} />;
   }
 
   const handleGuestUser = async () => {

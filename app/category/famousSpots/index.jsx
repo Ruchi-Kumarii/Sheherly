@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 
 const travelCategories = [
   { id: "1", name: "Parks & Gardens", slug: "parks-gardens", emoji: "🌳", desc: "Nature, walks & relaxation" },
@@ -29,7 +30,10 @@ export default function FamousSpotsPage() {
           <TouchableOpacity
             key={item.id}
             activeOpacity={0.85}
-            onPress={() => router.push(`/category/famousSpots/${item.slug}`)}
+            onPress={() => {
+              Haptics.selectionAsync();
+              router.push(`/category/famousSpots/${item.slug}`);
+            }}
             className="flex-row items-center bg-white p-4 rounded-2xl mb-4 shadow"
           >
             <Text className="text-4xl mr-4">{item.emoji}</Text>

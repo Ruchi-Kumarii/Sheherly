@@ -5,13 +5,15 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
-  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { ADMIN_URL } from "../../../config";
+import { ListingCardSkeleton } from "../../../components/SkeletonCard";
+import * as Haptics from "expo-haptics";
 
 const BASE_URL = ADMIN_URL;
 
@@ -22,6 +24,7 @@ export default function MedicalTypePage() {
   const [userLocation, setUserLocation] = useState(null);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Get user location
   useEffect(() => {
@@ -56,9 +59,10 @@ export default function MedicalTypePage() {
     );
   };
 
-  const fetchMedicalData = async () => {
+  const fetchMedicalData = async (isRefresh = false) => {
     try {
-      setLoading(true);
+      if (isRefresh) setRefreshing(true);
+      else setLoading(true);
 
       const response = await fetch(`${BASE_URL}/api/admin/data/medical/${type}`);
       const json = await response.json();
@@ -88,6 +92,7 @@ export default function MedicalTypePage() {
       Alert.alert("Error", "Could not load medical services");
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -113,9 +118,14 @@ export default function MedicalTypePage() {
 
   if (loading) {
     return (
-      <SafeAreaView className="flex-1 bg-[#eef7f6] justify-center items-center">
-        <ActivityIndicator size="large" color="#218fb4" />
-        <Text className="mt-3 text-gray-600">Loading medical services...</Text>
+      <SafeAreaView className="flex-1 bg-[#eef7f6]">
+        <View className="p-6">
+          <Text className="text-3xl font-bold text-[#0d47a1] capitalize">{type}</Text>
+          <Text className="text-sm text-gray-600 mt-1">Available {type} near you</Text>
+        </View>
+        <View className="px-4">
+          {[1, 2, 3, 4].map((i) => <ListingCardSkeleton key={i} />)}
+        </View>
       </SafeAreaView>
     );
   }
@@ -136,6 +146,14 @@ export default function MedicalTypePage() {
         data={data}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingHorizontal: 16 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => fetchMedicalData(true)}
+            colors={["#218fb4"]}
+            tintColor="#218fb4"
+          />
+        }
         renderItem={({ item }) => (
           <View className="bg-white p-4 rounded-2xl mb-3 shadow">
             <Text className="text-lg font-semibold">
@@ -157,12 +175,18 @@ export default function MedicalTypePage() {
             <View className="flex-row mt-3 space-x-4">
 
               {item.phone && item.phone !== "N/A" && (
-                <TouchableOpacity onPress={() => callPlace(item.phone)}>
+                <TouchableOpacity onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  callPlace(item.phone);
+                }}>
                   <Text className="text-blue-600">📞 Call</Text>
                 </TouchableOpacity>
               )}
 
-              <TouchableOpacity onPress={() => openMaps(item.lat, item.lng, item.name)}>
+              <TouchableOpacity onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                openMaps(item.lat, item.lng, item.name);
+              }}>
                 <Text className="text-green-600">🧭 Directions</Text>
               </TouchableOpacity>
 
