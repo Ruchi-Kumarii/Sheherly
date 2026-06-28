@@ -1,8 +1,10 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
+
+const foodDiningIntro = require("../../../assets/images/food_dining_intro.png");
 
 const foodOptions = [
   {
@@ -46,14 +48,12 @@ export default function FoodPage() {
   return (
     <SafeAreaView className="flex-1 bg-[#f3f5f9]">
 
-      <View className="p-6">
-        <Text className="text-3xl font-bold text-gray-800">
-          Food & Dining
-        </Text>
-        <Text className="text-sm text-gray-600 mt-1">
-          Find good food around you
-        </Text>
-      </View>
+      {/* Banner image */}
+      <Image
+        source={foodDiningIntro}
+        style={{ width: "100%", height: 200 }}
+        resizeMode="cover"
+      />
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="px-4">

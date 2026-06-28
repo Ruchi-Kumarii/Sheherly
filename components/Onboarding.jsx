@@ -1,45 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import {
   View, Text, TouchableOpacity, Dimensions,
-  Animated, FlatList,
+  Animated, FlatList, Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const ONBOARDING_KEY = "sheherly_onboarding_done";
 
 const slides = [
   {
     id: "1",
-    emoji: "🏯",
-    title: "Explore Jaipur",
-    desc: "Discover food, hotels, hospitals, transport and more — all in one place.",
+    image: require("../assets/images/intro1.png"),
     bg: "#e8f4f8",
     accent: "#085a73",
   },
   {
     id: "2",
-    emoji: "🗺️",
-    title: "Navigate with Ease",
-    desc: "Get directions to any spot in Jaipur using the built-in map.",
+    image: require("../assets/images/intro2.png"),
     bg: "#f0fdf4",
     accent: "#16a34a",
   },
   {
     id: "3",
-    emoji: "🤖",
-    title: "AI City Guide",
-    desc: "Ask Sheherly anything about the Pink City — food, history, shopping and more.",
+    image: require("../assets/images/intro3.png"),
     bg: "#f5f3ff",
     accent: "#7c3aed",
-  },
-  {
-    id: "4",
-    emoji: "📴",
-    title: "Works Offline Too",
-    desc: "Save your favourite places and access them even without internet.",
-    bg: "#fff7ed",
-    accent: "#ea580c",
   },
 ];
 
@@ -86,23 +72,17 @@ export default function Onboarding({ onDone }) {
               flex: 1,
               alignItems: "center",
               justifyContent: "center",
-              paddingHorizontal: 36,
               opacity: fadeAnim,
             }}
           >
-            <Text style={{ fontSize: 90, marginBottom: 32 }}>{item.emoji}</Text>
-            <Text style={{
-              fontSize: 28, fontWeight: "800", color: "#1a1a1a",
-              textAlign: "center", marginBottom: 16,
-            }}>
-              {item.title}
-            </Text>
-            <Text style={{
-              fontSize: 16, color: "#555", textAlign: "center",
-              lineHeight: 24,
-            }}>
-              {item.desc}
-            </Text>
+            <Image
+              source={item.image}
+              style={{
+                width: width,
+                height: height * 0.75,
+              }}
+              resizeMode="contain"
+            />
           </Animated.View>
         )}
       />
