@@ -25,7 +25,7 @@ const slides = [
     title: "Explore Jaipur\nLike a Local",
     subtitle: "Discover the best food, stays, transport,\nand hidden gems — all in one app.",
     accent: "#085a73",
-    bg: "#cde8f0",
+    bg: "#e8e4dc",   // exact beige/cream from intro1.png
   },
   {
     id: "2",
@@ -33,7 +33,7 @@ const slides = [
     title: "PG? Flat? Hostel?\nI got you homie!",
     subtitle: "Find the perfect accommodation — from\nbudget hostels to cozy flats — near you.",
     accent: "#218fb4",
-    bg: "#c9e8ef",
+    bg: "#cce7ec",   // exact light teal from intro2.png
   },
   {
     id: "3",
@@ -41,7 +41,7 @@ const slides = [
     title: "Your AI Guide\nto the City",
     subtitle: "Ask our chatbot anything about Jaipur —\nroutes, timings, tips and more.",
     accent: "#085a73",
-    bg: "#cde8f0",
+    bg: "#cce7ec",   // exact light teal from intro3.png
   },
 ];
 
@@ -183,7 +183,7 @@ export default function Onboarding({ onDone }) {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: "#cde8f0",
+    backgroundColor: "#e8e4dc",
   },
   topBar: {
     position: "absolute",
@@ -215,9 +215,9 @@ const styles = StyleSheet.create({
   },
   bottomCard: {
     height: BOTTOM_H,
-    marginTop: -30,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    marginTop: 0,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
     paddingHorizontal: 28,
     paddingTop: 24,
     paddingBottom: 32,
