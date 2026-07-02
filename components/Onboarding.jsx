@@ -110,18 +110,16 @@ export default function Onboarding({ onDone }) {
         })}
       />
 
-      {/* Top bar */}
-      <View style={styles.topBar}>
-        <Text style={styles.appName}>Sheherly</Text>
-        {current < slides.length - 1 && (
-          <TouchableOpacity
-            onPress={finish}
-            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-          >
-            <Text style={styles.skipText}>Skip</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      {/* Skip button only — top right, no app name */}
+      {current < slides.length - 1 && (
+        <TouchableOpacity
+          onPress={finish}
+          style={styles.skipBtn}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <Text style={styles.skipText}>Skip</Text>
+        </TouchableOpacity>
+      )}
 
       {/* Bottom overlay — NO background color, text + button float on image */}
       <View style={styles.bottom}>
@@ -172,27 +170,15 @@ export default function Onboarding({ onDone }) {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#c9e4e8", // fallback matches slide images, no black flash
   },
-  topBar: {
+  skipBtn: {
     position: "absolute",
     top: 48,
-    left: 0,
-    right: 0,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 24,
+    right: 24,
     zIndex: 20,
-  },
-  appName: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: "#fff",
-    letterSpacing: 0.4,
-    textShadowColor: "rgba(0,0,0,0.35)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
   },
   skipText: {
     fontSize: 15,
