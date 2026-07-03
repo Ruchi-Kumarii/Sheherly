@@ -239,9 +239,12 @@ const styles = StyleSheet.create({
 });
 
 export async function shouldShowOnboarding() {
-  const stored = await AsyncStorage.getItem(ONBOARDING_VERSION_KEY);
-  if (stored === null) {
-    await AsyncStorage.removeItem(ONBOARDING_OLD_KEY);
-  }
-  return stored !== APP_VERSION;
+  // Force onboarding to always show during testing
+  return true;
+  
+  // const stored = await AsyncStorage.getItem(ONBOARDING_VERSION_KEY);
+  // if (stored === null) {
+  //   await AsyncStorage.removeItem(ONBOARDING_OLD_KEY);
+  // }
+  // return stored !== APP_VERSION;
 }
