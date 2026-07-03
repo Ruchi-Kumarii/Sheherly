@@ -24,20 +24,23 @@ const slides = [
     title: "Explore Jaipur\nLike a Local",
     subtitle: "Discover the best food, stays, transport,\nand hidden gems — all in one app.",
     accent: "#085a73",
+    bg: "#f0ece6ff",   // beige/cream — matches intro1.png
   },
   {
     id: "2",
     image: require("../assets/images/intro2.png"),
-    title: "PG? Flat? Hostel?\nI got you homie!",
-    subtitle: "Find the perfect accommodation — from\nbudget hostels to cozy flats — near you.",
-    accent: "#218fb4",
+    title: "",
+    subtitle: "But Sheherly is with you!",
+    accent: "#3485a0ff",
+    bg: "#dce0e4ff",   // light teal — matches intro2.png
   },
   {
     id: "3",
     image: require("../assets/images/intro3.png"),
-    title: "Your AI Guide\nto the City",
-    subtitle: "Ask our chatbot anything about Jaipur —\nroutes, timings, tips and more.",
+    title: "",
+    subtitle: "Find the perfect accommodation — from\nbudget hostels to cozy flats — near you.",
     accent: "#085a73",
+    bg: "#d1eaedff",   // light teal — matches intro3.png
   },
 ];
 
@@ -83,7 +86,7 @@ export default function Onboarding({ onDone }) {
   );
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { backgroundColor: slide.bg }]}>
       <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
 
       {/* Full screen image pager */}
@@ -170,7 +173,7 @@ export default function Onboarding({ onDone }) {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: "#c9e4e8", // fallback matches slide images, no black flash
+    backgroundColor: "#e8e4dc",
   },
   skipBtn: {
     position: "absolute",
@@ -201,13 +204,13 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   title: {
-    fontSize: 26,
+    fontSize: 15,
     fontWeight: "800",
     textAlign: "center",
     lineHeight: 34,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 10,
     color: "#374151",
     textAlign: "center",
     lineHeight: 22,
