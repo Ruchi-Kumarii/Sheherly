@@ -16,12 +16,28 @@ export default function AccommodationTypePage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const openLink = async (url) => {
-    const supported = await Linking.canOpenURL(url);
+  const openLink = async (platformName, hotelName, url) => {
+    let searchUrl = url;
+
+    // Generate search URLs for platforms that block deep links
+    const hotelQuery = encodeURIComponent(hotelName);
+    const cityQuery = "Jaipur";
+
+    if (platformName.toLowerCase().includes("agoda")) {
+      searchUrl = `https://www.agoda.com/search?city=6241&checkIn=2026-12-01&checkOut=2026-12-02&rooms=1&adults=1&children=0&cid=1844104&searchText=${hotelQuery}`;
+    } else if (platformName.toLowerCase().includes("goibibo")) {
+      searchUrl = `https://www.goibibo.com/hotels/search/?hquery=${hotelQuery}&cc=IN`;
+    } else if (platformName.toLowerCase().includes("makemytrip")) {
+      searchUrl = `https://www.makemytrip.com/hotels/hotel-listing/?checkin=12012026&checkout=12022026&city=CTJAI&country=IN&searchText=${hotelQuery}`;
+    } else if (platformName.toLowerCase().includes("booking")) {
+      searchUrl = `https://www.booking.com/searchresults.html?ss=${hotelQuery}+${cityQuery}`;
+    }
+
+    const supported = await Linking.canOpenURL(searchUrl);
     if (supported) {
-      await Linking.openURL(url);
+      await Linking.openURL(searchUrl);
     } else {
-      Alert.alert("Error", "Invalid link");
+      Alert.alert("Error", "Could not open booking page");
     }
   };
 
@@ -158,7 +174,7 @@ export default function AccommodationTypePage() {
                           </Text>
 
                           <TouchableOpacity
-                            onPress={() => openLink(platform.link)}
+                            onPress={() => openLink(platform.name, item.name, platform.link)}
                             className="bg-blue-500 mt-2 px-2 py-1 rounded"
                           >
                             <Text className="text-white text-xs text-center">

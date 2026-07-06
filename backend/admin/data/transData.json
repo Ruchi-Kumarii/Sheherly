@@ -1,9 +1,9 @@
-{
+﻿{
   "bus": [
     {
       "id": "BUS001",
       "route_number": "5A",
-      "name": "Sindhi Camp → Mansarovar",
+      "name": "Sindhi Camp â†’ Mansarovar",
       "from": "Sindhi Camp",
       "to": "Mansarovar",
       "via": "Ajmer Road, Gopalpura",
@@ -19,7 +19,7 @@
     {
       "id": "BUS002",
       "route_number": "9",
-      "name": "Jaipur Junction → Jagatpura",
+      "name": "Jaipur Junction â†’ Jagatpura",
       "from": "Jaipur Junction",
       "to": "Jagatpura",
       "via": "Durgapura, Sitapura",
@@ -35,7 +35,7 @@
     {
       "id": "BUS003",
       "route_number": "2C",
-      "name": "Vidhyadhar Nagar → Sanganer",
+      "name": "Vidhyadhar Nagar â†’ Sanganer",
       "from": "Vidhyadhar Nagar",
       "to": "Sanganer",
       "via": "Civil Lines, MI Road",
@@ -51,7 +51,7 @@
     {
       "id": "BUS004",
       "route_number": "AC1",
-      "name": "Sindhi Camp → Vaishali Nagar",
+      "name": "Sindhi Camp â†’ Vaishali Nagar",
       "from": "Sindhi Camp",
       "to": "Vaishali Nagar",
       "via": "Ajmer Road",
@@ -67,7 +67,7 @@
     {
       "id": "BUS005",
       "route_number": "7",
-      "name": "Bani Park → Bapu Nagar",
+      "name": "Bani Park â†’ Bapu Nagar",
       "from": "Bani Park",
       "to": "Bapu Nagar",
       "via": "MI Road, Tonk Road",
@@ -83,7 +83,7 @@
     {
       "id": "BUS006",
       "route_number": "AC3",
-      "name": "Jaipur Junction → C-Scheme",
+      "name": "Jaipur Junction â†’ C-Scheme",
       "from": "Jaipur Junction",
       "to": "C-Scheme",
       "via": "MI Road",
@@ -99,7 +99,7 @@
     {
       "id": "BUS007",
       "route_number": "11B",
-      "name": "Amer → Sindhi Camp",
+      "name": "Amer â†’ Sindhi Camp",
       "from": "Amer",
       "to": "Sindhi Camp",
       "via": "Jal Mahal, Zorawar Singh Gate",
@@ -115,7 +115,7 @@
     {
       "id": "BUS008",
       "route_number": "14",
-      "name": "Malviya Nagar → Civil Lines",
+      "name": "Malviya Nagar â†’ Civil Lines",
       "from": "Malviya Nagar",
       "to": "Civil Lines",
       "via": "Tonk Road, Ajmer Road",
@@ -180,7 +180,7 @@
       "ac": true,
       "example_fare_5km": 80,
       "example_fare_10km": 130,
-      "book_url": "https://m.uber.com/",
+      "book_url": "https://www.uber.com/in/en/ride/",
       "app_scheme": "uber://",
       "color": "#000000",
       "features": ["AC", "Live Tracking", "In-app payment", "Safety features"]
@@ -198,7 +198,7 @@
       "ac": false,
       "example_fare_5km": 65,
       "example_fare_10km": 105,
-      "book_url": "https://m.uber.com/",
+      "book_url": "https://www.uber.com/in/en/ride/",
       "app_scheme": "uber://",
       "color": "#000000",
       "features": ["No AC", "Live Tracking", "Budget-friendly"]
@@ -230,11 +230,11 @@
       "description": "Most common local transport. Metered or negotiated fare.",
       "base_fare": 25,
       "per_km_rate": 9,
-      "typical_short_ride": "₹30–60 (under 3 km)",
-      "typical_medium_ride": "₹60–120 (3–8 km)",
-      "typical_long_ride": "₹120–200 (8–15 km)",
+      "typical_short_ride": "â‚¹30â€“60 (under 3 km)",
+      "typical_medium_ride": "â‚¹60â€“120 (3â€“8 km)",
+      "typical_long_ride": "â‚¹120â€“200 (8â€“15 km)",
       "availability": "All day, everywhere",
-      "tip": "Always ask for meter or agree on fare before boarding. Night charges (10pm–5am) are 1.5x.",
+      "tip": "Always ask for meter or agree on fare before boarding. Night charges (10pmâ€“5am) are 1.5x.",
       "booking_app": "Uber Auto / Ola Auto",
       "rating": 3.8,
       "best_for": "Short distances, local markets"
@@ -245,12 +245,12 @@
       "description": "Electric battery-powered shared rickshaws. Very cheap for fixed short routes.",
       "base_fare": 10,
       "per_km_rate": 5,
-      "typical_short_ride": "₹10–20 (fixed routes)",
-      "typical_medium_ride": "₹20–40",
+      "typical_short_ride": "â‚¹10â€“20 (fixed routes)",
+      "typical_medium_ride": "â‚¹20â€“40",
       "typical_long_ride": "Not recommended",
-      "availability": "6 AM – 9 PM",
+      "availability": "6 AM â€“ 9 PM",
       "tip": "Mostly shared rides on fixed routes. Great for last-mile connectivity from metro stations.",
-      "booking_app": "Not available — street hail only",
+      "booking_app": "Not available â€” street hail only",
       "rating": 3.5,
       "best_for": "Metro station last-mile, budget travel"
     },
@@ -260,10 +260,10 @@
       "description": "Pedal-powered rickshaws. Available in old city areas and bazaars.",
       "base_fare": 20,
       "per_km_rate": 10,
-      "typical_short_ride": "₹20–40",
-      "typical_medium_ride": "₹40–80",
+      "typical_short_ride": "â‚¹20â€“40",
+      "typical_medium_ride": "â‚¹40â€“80",
       "typical_long_ride": "Not suitable",
-      "availability": "6 AM – 8 PM (old city areas)",
+      "availability": "6 AM â€“ 8 PM (old city areas)",
       "tip": "Great for exploring Johari Bazaar, Bapu Bazaar areas. Negotiate before boarding.",
       "booking_app": "Street hail only",
       "rating": 4.0,
@@ -303,7 +303,7 @@
       "min_age": 21,
       "license_required": true,
       "pickup_locations": ["MI Road", "Jaipur Junction area"],
-      "booking_url": "https://www.royalbros.com/",
+      "booking_url": "https://www.royalbrothers.com/jaipur/bike-rentals",
       "rating": 4.4,
       "available": true,
       "tip": "Great for longer trips to Amer, Nahargarh. Fuel not included."
@@ -346,7 +346,7 @@
     },
     {
       "id": "BK005",
-      "name": "Drivezy",
+      "name": "Rentickle Bikes",
       "type": "Bike",
       "model": "Hero Splendor / Honda CB Shine",
       "price_per_hour": 25,
@@ -357,7 +357,7 @@
       "min_age": 18,
       "license_required": true,
       "pickup_locations": ["Bani Park", "Jawahar Nagar", "Bapu Nagar"],
-      "booking_url": "https://www.drivezy.com/",
+      "booking_url": "https://www.rentickle.com/bikes",
       "rating": 3.9,
       "available": false,
       "tip": "Most affordable bike rental. Book online to avoid walk-in wait."

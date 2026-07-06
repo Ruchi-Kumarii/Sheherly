@@ -7,6 +7,7 @@ import {
   Image,
   Linking,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -180,7 +181,13 @@ export default function Result() {
     return "https://cdn-icons-png.flaticon.com/512/61/61231.png";
   };
 
-  const openWebsite = (url) => Linking.openURL(url);
+  const openWebsite = (url) => {
+    if (!url || (!url.startsWith("https://") && !url.startsWith("http://"))) {
+      Alert.alert("Error", "Invalid link");
+      return;
+    }
+    Linking.openURL(url).catch(() => Alert.alert("Error", "Could not open link"));
+  };
   const callDriver = (number) => {
     if (number) Linking.openURL(`tel:${number}`);
   };
@@ -673,9 +680,7 @@ export default function Result() {
                     className="flex-row justify-between items-center py-3"
                     onPress={() => {
                       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                      openWebsite(
-                        `https://www.redbus.in/search?fromCityName=${item.from}&toCityName=${item.to}`
-                      );
+                      openWebsite(`https://www.redbus.in/`);
                     }}
                   >
                     <Text className="text-[15px] font-semibold text-slate-700">
@@ -693,7 +698,7 @@ export default function Result() {
                     onPress={() => {
                       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                       openWebsite(
-                        `https://www.abhibus.com/bus-tickets/${item.from}-to-${item.to}`
+                        `https://www.abhibus.com/`
                       );
                     }}
                   >

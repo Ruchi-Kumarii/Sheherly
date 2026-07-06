@@ -28,6 +28,14 @@ export default function Index() {
 
   useEffect(() => {
     const bootstrap = async () => {
+      // ── Step 0: Always check onboarding first ──
+      const needsOnboarding = await shouldShowOnboarding();
+      if (needsOnboarding) {
+        setShowOnboarding(true);
+        setChecking(false);
+        return;
+      }
+
       // ── Step 1: Check AsyncStorage FIRST (instant, no network needed) ──
       // If we have a saved UID, the user was signed in last session.
       // Send them straight to home regardless of network state.
@@ -71,9 +79,7 @@ export default function Index() {
           setRedirecting(true);
           router.replace("/home");
         } else {
-          // No Firebase user — show onboarding or welcome
-          const needsOnboarding = await shouldShowOnboarding();
-          setShowOnboarding(needsOnboarding);
+          // No Firebase user — show welcome page
           setChecking(false);
         }
       });

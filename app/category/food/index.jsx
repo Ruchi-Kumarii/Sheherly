@@ -46,15 +46,18 @@ export default function FoodPage() {
   return (
     <SafeAreaView className="flex-1 bg-[#f3f5f9]">
 
+      {/* Header — same style as Medical Services */}
+      <View className="p-6">
+        <Text className="text-3xl font-bold text-[#085a73]">
+          Food & Dining
+        </Text>
+        <Text className="text-sm text-gray-500 mt-1">
+          Explore, Eat & Repeat 🍴
+        </Text>
+      </View>
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="px-4">
-
-          {/* Quote */}
-          <View className="mb-4 mt-3">
-            <Text className="text-center text-base italic text-[#218fb4] font-semibold">
-              "Explore, Eat & Repeat 🍴"
-            </Text>
-          </View>
 
           {filteredData.map(item => (
             <TouchableOpacity

@@ -10,7 +10,7 @@
       "reviews": 18000,
       "platforms": [
         { "name": "Booking.com", "price": 8500, "link": "https://www.booking.com" },
-        { "name": "Agoda", "price": 8000, "link": "agoda.com/en-in/itc-rajputana-a-luxury-collection-hotel-jaipur_7/hotel/jaipur-in.html?countryId=35&finalPriceView=1&isShowMobileAppPrice=false&cid=1922866&numberOfBedrooms=&familyMode=false&adults=1&children=0&rooms=1&maxRooms=0&checkIn=2026-04-12&isCalendarCallout=false&childAges=&numberOfGuest=0&missingChildAges=false&travellerType=-1&showReviewSubmissionEntry=false&currencyCode=INR&isFreeOccSearch=false&tag=2f60c100-3eb7-460b-8c06-ea0dc5f0d2f8&tspTypes=16&los=1&searchrequestid=75b7049c-304f-4a6b-9a7a-f0520fe51a9d" },
+        { "name": "Agoda", "price": 8000, "link": "https://www.agoda.com/en-in/itc-rajputana-a-luxury-collection-hotel-jaipur_7/hotel/jaipur-in.html?cid=1922866" },
         { "name": "Goibibo", "price": 8200, "link": "https://www.goibibo.com/hotels/itc-rajputana-a-luxury-collection-hotel-in-jaipur-7431082656517804669/" },
         { "name": "MakemyTrip", "price": 8200, "link": "https://www.makemytrip.com/hotels/itc_rajputana_a_luxury_collection_hotel-details-jaipur.html" }
       ]
@@ -41,7 +41,7 @@
       "platforms": [
         { "name": "Booking.com", "price": 7000, "link": "https://www.booking.com" },
         { "name": "Agoda", "price": 6800, "link": "https://www.agoda.com/en-in/hilton-jaipur/hotel/jaipur-in.html?cid=1844104&ds=lhCFHDnNPsg%2FLBJE" },
-        { "name": "MakeMyTrip", "price": 6800, "link": "makemytrip.com/hotels/hotel-details/?hotelId=201404121142192854&_uCurrency=INR&adg=151620960857&aid=674855136232&campaign_type=search&cid=Cj0KCQjwyr3OBhD0ARIsALlo-OnfI48g02BXqlqXgdkclYTSrxOns8z3PHou1jurn1LufSLUByqNlFMaAvFIEALw_wcB&city=CTJAI&cmp=SEM%7CD%7CDH%7CG%7CHname%7CDH_HName_CTJAI_10-15K_DT%7C201404121142192854%7CR%7C&country=IN&device=c&gad_campaignid=20577354898&gad_source=1&gbraid=0AAAAAD5Az1SLYHHpQYW36jUab64Q_djFQ&gclid=Cj0KCQjwyr3OBhD0ARIsALlo-OnfI48g02BXqlqXgdkclYTSrxOns8z3PHou1jurn1LufSLUByqNlFMaAvFIEALw_wcB&kw=hilton%20jaipur&lat=26.90111&lng=75.78386&locusId=CTJAI&locusType=city&mf_campaign=%7BHARDCODE_CAMPAIGN_NAME%7D&mf_campaignid=20577354898&mf_medium=cpc&mf_source=google&pl=&rank=1&reference=hotel&roomStayQualifier=2e0e&searchText=Jaipur&topHtlId=201404121142192854&type=city&viewType=PREMIUM&mtkeys=undefined" },
+        { "name": "MakeMyTrip", "price": 6800, "link": "https://www.makemytrip.com/hotels/hotel-details/?hotelId=201404121142192854&_uCurrency=INR&city=CTJAI&country=IN" },
         { "name": "Goibibo", "price": 6900, "link": "https://www.goibibo.com/hotels/hotel-details/?checkin=20260408&checkout=20260409&roomString=1-2-0&searchText=Hilton%20Jaipur&locusId=CTJAI&locusType=city&cityCode=CTJAI&cc=IN&_uCurrency=INR&vcid=CTJAI&giHotelId=2840109404644229079&mmtId=201404121142192854&topHtlId=201404121142192854&sType=hotel" }
       ]
     },
@@ -89,7 +89,7 @@
       "platforms": [
         { "name": "Hostelworld", "price": 900, "link": "https://www.hostelworld.com/hostels/p/92906/the-moustache-jaipur/" },
         { "name": "MakemyTrip", "price": 900, "link": "https://www.makemytrip.com/hotels/moustache_hostel_jaipur_rooms_dorms-details-jaipur.html" },
-        { "name": "Agoda", "price": 900, "link": "agoda.com/en-in/the-moustache/hotel/jaipur-in.html?cid=1844104" },
+        { "name": "Agoda", "price": 900, "link": "https://www.agoda.com/en-in/the-moustache/hotel/jaipur-in.html?cid=1844104" },
         { "name": "Goibibo", "price": 900, "link": "https://www.goibibo.com/hotels/moustache-hostel-jaipur-rooms-dorms-hotel-in-jaipur-3106774032924368392/" },
         { "name": "Booking.com", "price": 1100, "link": "https://www.booking.com" }
       ]
@@ -234,8 +234,8 @@
       "rating": 4.6,
       "reviews": 300,
       "platforms": [
-        { "name": "Airbnb", "price": 4000, "link": "airbnb.co.in/rooms/48494263" },
-        { "name": "Agoda", "price": 4000, "link": "agoda.com/en-in/le-pension-backpackers-hostel-jaipur/hotel/jaipur-in.html?cid=1844104" },
+        { "name": "Airbnb", "price": 4000, "link": "https://www.airbnb.co.in/rooms/48494263" },
+        { "name": "Agoda", "price": 4000, "link": "https://www.agoda.com/en-in/le-pension-backpackers-hostel-jaipur/hotel/jaipur-in.html?cid=1844104" },
         { "name": "Goibibo", "price": 4200, "link": "https://www.goibibo.com/hotels/the-karauli-villa-by-le-pension-stays-hotel-in-jaipur-6689747419289203864/" },
         { "name": "MakeMyTrip", "price": 4200, "link": "https://www.makemytrip.com/hotels/the_karauli_villa_by_le_pension_stays-details-jaipur.html" }
       ]

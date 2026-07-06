@@ -4,6 +4,10 @@ import { initializeAuth, getAuth, getReactNativePersistence } from "firebase/aut
 import { getStorage } from "firebase/storage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// NOTE: Firebase API keys are safe to be public (they identify the project,
+// not grant admin access). Security is enforced via Firebase Security Rules.
+// Before going live: set Firestore rules to restrict read/write to
+// authenticated users only in the Firebase Console → Firestore → Rules.
 const firebaseConfig = {
   apiKey: "AIzaSyAYIk99HQzk7AnyJBdaLsvyj2YbJsh2kI4",
   authDomain: "sheherly-09b.firebaseapp.com",
