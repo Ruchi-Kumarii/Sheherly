@@ -1,5 +1,6 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNetworkStatus } from '../../hooks/useNetworkStatus';
 const logo = require("../../assets/images/sheherlyTitle.png")
@@ -13,11 +14,15 @@ export default function Home() {
       style={{ backgroundColor: "white", paddingTop: 0 }}
       className="flex-1"
     >
-      <View className="flex items-center justify-start pt-5">
-        <View className="bg-white w-full justify-center items-center flex flex-row p-1 border border-[#9fd5efff]"
-          style={{ borderRadius: 20 }}>
-          <Image source={logo} style={{ width: 200, height: 85 }} />
+      {/* Top bar */}
+      <View className="flex-row items-center justify-between px-4 pt-4 pb-2">
+        <View>
+          <Text className="text-xl font-bold text-slate-800">
+            {new Date().getHours() < 12 ? "Good morning 👋" : new Date().getHours() < 17 ? "Good afternoon 👋" : "Good evening 👋"}
+          </Text>
+          <Text className="text-sm text-slate-500 mt-0.5">Explore Jaipur</Text>
         </View>
+        <Image source={logo} style={{ width: 110, height: 48 }} resizeMode="contain" />
       </View>
 
       {/* No internet banner */}
@@ -61,7 +66,8 @@ export default function Home() {
 
 
         {/* Food and Dining */}
-        <View className="w-11/12 mt-6 self-center bg-white rounded-xl p-4 shadow-md border border-amber-100">
+        <View className="w-11/12 mt-4 self-center bg-white rounded-xl p-4"
+          style={{ borderLeftWidth: 4, borderLeftColor: "#f59e0b", shadowColor: "#64748b", shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.12, shadowRadius: 8, elevation: 4 }}>
 
           <View className="flex flex-row items-center justify-between mb-3">
             <TouchableOpacity onPress={() => router.push("/category/food")}>
@@ -97,7 +103,7 @@ export default function Home() {
 
             <TouchableOpacity className="items-center" onPress={() => router.push("/category/food/night-cafes")}>
               <View className="w-14 h-14 bg-amber-100 rounded-2xl items-center justify-center shadow-sm">
-                <Text className="text-2xl">🍔</Text>
+                <Text className="text-2xl">🌙</Text>
               </View>
               <Text className="text-xs font-medium mt-1 text-slate-600">Open Night Cafes</Text>
             </TouchableOpacity>
@@ -105,7 +111,8 @@ export default function Home() {
         </View>
 
         {/* Medical */}
-        <View className="w-11/12 mt-6 self-center bg-white rounded-xl p-4 shadow-md border border-rose-100">
+        <View className="w-11/12 mt-4 self-center bg-white rounded-xl p-4"
+          style={{ borderLeftWidth: 4, borderLeftColor: "#f43f5e", shadowColor: "#64748b", shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.12, shadowRadius: 8, elevation: 4 }}>
 
           <View className="flex flex-row items-center justify-between mb-3">
             <TouchableOpacity onPress={() => router.push("/category/medical")}>
@@ -146,7 +153,8 @@ export default function Home() {
         </View>
 
         {/* Accommodation */}
-        <View className="w-11/12 mt-6 self-center bg-white rounded-xl p-4 shadow-md border border-violet-100">
+        <View className="w-11/12 mt-4 self-center bg-white rounded-xl p-4"
+          style={{ borderLeftWidth: 4, borderLeftColor: "#8b5cf6", shadowColor: "#64748b", shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.12, shadowRadius: 8, elevation: 4 }}>
 
           <View className="flex flex-row items-center justify-between mb-3">
             <TouchableOpacity onPress={() => router.push("/category/accommodation")}>
@@ -186,7 +194,8 @@ export default function Home() {
         </View>
 
         {/* Transportation */}
-        <View className="w-11/12 mt-6 self-center bg-white rounded-xl p-4 shadow-md border border-blue-100">
+        <View className="w-11/12 mt-4 self-center bg-white rounded-xl p-4"
+          style={{ borderLeftWidth: 4, borderLeftColor: "#3b82f6", shadowColor: "#64748b", shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.12, shadowRadius: 8, elevation: 4 }}>
           <View className="flex flex-row items-center justify-between mb-3">
             <TouchableOpacity onPress={() => router.push("/category/transportation")}>
               <Text className="text-lg font-bold text-slate-800">Transportation</Text>
@@ -251,7 +260,8 @@ export default function Home() {
         </View>
 
         {/* Local Services */}
-        <View className="w-11/12 mt-6 self-center bg-white rounded-xl p-4 shadow-md border border-cyan-100">
+        <View className="w-11/12 mt-4 self-center bg-white rounded-xl p-4"
+          style={{ borderLeftWidth: 4, borderLeftColor: "#06b6d4", shadowColor: "#64748b", shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.12, shadowRadius: 8, elevation: 4 }}>
 
           <View className="flex flex-row items-center justify-between mb-3">
             <TouchableOpacity onPress={() => router.push("/category/localServices")}>
@@ -293,7 +303,8 @@ export default function Home() {
 
 
         {/* Famous spots */}
-        <View className="w-11/12 mt-6 self-center bg-white rounded-xl p-4 shadow-md border border-yellow-100">
+        <View className="w-11/12 mt-4 self-center bg-white rounded-xl p-4"
+          style={{ borderLeftWidth: 4, borderLeftColor: "#eab308", shadowColor: "#64748b", shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.12, shadowRadius: 8, elevation: 4 }}>
 
           <View className="flex flex-row items-center justify-between mb-3">
             <TouchableOpacity onPress={() => router.push("/category/famousSpots")}>
@@ -333,16 +344,28 @@ export default function Home() {
           </View>
         </View>
 
-        {/* Safety and Police */}
-        <View className="w-11/12 mt-6 mb-10 self-center bg-white rounded-xl p-4 shadow-md border border-red-300">
-
-          <View className="flex flex items-center justify-between mb-3">
-            <TouchableOpacity onPress={() => router.push("/category/safety")}>
-              <Text className="text-xl font-bold text-slate-800">🚨 Safety</Text>
-            </TouchableOpacity>
-
+        {/* Safety */}
+        <TouchableOpacity
+          onPress={() => router.push("/category/safety")}
+          activeOpacity={0.85}
+          style={{
+            marginTop: 16,
+            marginBottom: 40,
+            marginHorizontal: 16,
+            borderRadius: 14,
+            backgroundColor: "#dc2626",
+            overflow: "hidden",
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingVertical: 16, gap: 14 }}>
+            <Ionicons name="warning-outline" size={24} color="white" />
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "white", fontWeight: "800", fontSize: 15 }}>Emergency? We're here</Text>
+              <Text style={{ color: "#fecaca", fontSize: 12, marginTop: 2 }}>Police, ambulance & safety info</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="white" />
           </View>
-        </View>
+        </TouchableOpacity>
 
       </ScrollView>
     </SafeAreaView>

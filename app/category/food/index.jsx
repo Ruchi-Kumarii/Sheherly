@@ -1,8 +1,8 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
-import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const foodOptions = [
   {
@@ -28,9 +28,9 @@ const foodOptions = [
   },
   {
     id: "4",
-    name: "Night Cafes",
+    name: "Open Night Cafes",
     slug: "night-cafes",
-    emoji: "🍔",
+    emoji: "🌙",
     desc: "Late-night cravings",
   },
 ];
@@ -51,7 +51,7 @@ export default function FoodPage() {
         <Text className="text-3xl font-bold text-[#085a73]">
           Food & Dining
         </Text>
-        <Text className="text-sm text-gray-500 mt-1">
+        <Text className="text-sm text-gray-600 mt-1">
           Explore, Eat & Repeat 🍴
         </Text>
       </View>
@@ -67,7 +67,8 @@ export default function FoodPage() {
                 Haptics.selectionAsync();
                 router.push(`/category/food/${item.slug}`);
               }}
-              className="flex-row items-center bg-white p-4 rounded-2xl mb-3 shadow"
+              className="flex-row items-center bg-white p-4 rounded-2xl mb-3"
+              style={{ shadowColor: "#64748b", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.13, shadowRadius: 10, elevation: 5 }}
             >
               <Text className="text-4xl mr-4">{item.emoji}</Text>
 
@@ -75,7 +76,7 @@ export default function FoodPage() {
                 <Text className="text-lg font-semibold">
                   {item.name}
                 </Text>
-                <Text className="text-sm text-gray-500 mt-1">
+                <Text className="text-sm text-gray-600 mt-1">
                   {item.desc}
                 </Text>
               </View>

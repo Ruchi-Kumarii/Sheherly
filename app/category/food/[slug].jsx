@@ -1,18 +1,19 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
+import * as Haptics from "expo-haptics";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Linking,
-  Alert,
-  RefreshControl,
+    Alert,
+    FlatList,
+    Linking,
+    RefreshControl,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState, useEffect } from "react";
-import { ADMIN_URL } from "../../../config";
 import { ListingCardSkeleton } from "../../../components/SkeletonCard";
-import * as Haptics from "expo-haptics";
+import { ADMIN_URL } from "../../../config";
 
 const BASE_URL = ADMIN_URL;
 
@@ -104,7 +105,8 @@ export default function FoodTypePage() {
           />
         }
         renderItem={({ item }) => (
-          <View className="bg-white p-4 rounded-2xl mb-4 shadow">
+          <View className="bg-white p-4 rounded-2xl mb-4"
+            style={{ shadowColor: "#64748b", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.13, shadowRadius: 10, elevation: 5 }}>
             <View className="flex-row justify-between items-center">
               <Text className="text-lg font-semibold flex-1">{item.name}</Text>
               <View className="flex-row items-center">
@@ -118,7 +120,7 @@ export default function FoodTypePage() {
                   }}
                   className="ml-2"
                 >
-                  <Text className="text-lg">📍</Text>
+                  <Ionicons name="location-outline" size={22} color="#218fb4" />
                 </TouchableOpacity>
                 {item.phone && item.phone !== "N/A" && (
                   <TouchableOpacity

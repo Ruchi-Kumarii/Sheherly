@@ -1,8 +1,8 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
-import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const localServices = [
   {
@@ -63,13 +63,14 @@ export default function LocalServicesPage() {
               Haptics.selectionAsync();
               router.push(`/category/localServices/${item.slug}`);
             }}
-            className="flex-row items-center bg-white p-4 rounded-2xl mb-4 shadow"
+            className="flex-row items-center bg-white p-4 rounded-2xl mb-4"
+            style={{ shadowColor: "#64748b", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.13, shadowRadius: 10, elevation: 5 }}
           >
             <Text className="text-4xl mr-4">{item.emoji}</Text>
 
             <View className="flex-1">
               <Text className="text-lg font-semibold">{item.name}</Text>
-              <Text className="text-sm text-gray-500 mt-1">{item.desc}</Text>
+              <Text className="text-sm text-gray-600 mt-1">{item.desc}</Text>
             </View>
 
             <Text className="text-xl text-gray-400">›</Text>

@@ -1,10 +1,11 @@
-import { View, Text, FlatList, TouchableOpacity, Linking, Alert, RefreshControl } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ADMIN_URL } from "../../../config";
+import { Alert, FlatList, Linking, RefreshControl, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ListingCardSkeleton } from "../../../components/SkeletonCard";
-import * as Haptics from "expo-haptics";
+import { ADMIN_URL } from "../../../config";
 
 const BASE_URL = ADMIN_URL;
 
@@ -113,15 +114,19 @@ export default function AccommodationTypePage() {
           const cheapest = sortedPlatforms[0];
 
           return (
-            <View className="bg-white p-4 rounded-2xl mb-4 shadow">
+            <View className="bg-white p-4 rounded-2xl mb-4"
+              style={{ shadowColor: "#64748b", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.13, shadowRadius: 10, elevation: 5 }}>
 
               <Text className="text-lg font-semibold">
                 {item.name}
               </Text>
 
-              <Text className="text-sm text-gray-500 mt-1">
-                📍 {item.location} · ⭐ {item.rating} ({item.reviews} reviews)
-              </Text>
+              <View className="flex-row items-center mt-1" style={{ gap: 4 }}>
+                <Ionicons name="location-outline" size={13} color="#6b7280" />
+                <Text className="text-sm text-gray-500 flex-1">
+                  {item.location} · ⭐ {item.rating} ({item.reviews} reviews)
+                </Text>
+              </View>
 
               <TouchableOpacity
                 onPress={() => {
@@ -140,13 +145,12 @@ export default function AccommodationTypePage() {
                 <TouchableOpacity
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                    openLink(`tel:${item.phone}`);
+                    if (item.phone) Linking.openURL(`tel:${item.phone}`);
                   }}
-                  className="mt-3 bg-green-500 px-3 py-2 rounded-lg"
+                  style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 10, backgroundColor: "#16a34a", paddingVertical: 10, borderRadius: 12 }}
                 >
-                  <Text className="text-white text-center font-semibold">
-                    📞 Call Now
-                  </Text>
+                  <Ionicons name="call-outline" size={15} color="white" />
+                  <Text style={{ color: "white", fontSize: 13, fontWeight: "600" }}>Call Now</Text>
                 </TouchableOpacity>
               ) : (
                 <>

@@ -16,6 +16,7 @@ import { db } from "../../../firebase";
 import { saveOfflineData, loadOfflineData } from "../../../hooks/useOfflineCache";
 import { useNetworkStatus } from "../../../hooks/useNetworkStatus";
 import * as Haptics from "expo-haptics";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function Result() {
   const {
@@ -328,7 +329,7 @@ export default function Result() {
                   <Text className="font-bold">{item.vehicle_model}</Text>
                 </Text>
                 <Text className="text-[14px] text-slate-700 font-medium">
-                  📍 Area:{" "}
+                  <Ionicons name="location-outline" size={14} color="#64748b" /> Area:{" "}
                   <Text className="font-bold">{item.operating_zone}</Text>
                 </Text>
                 <Text className="text-[14px] text-slate-700 font-medium">
@@ -454,7 +455,7 @@ export default function Result() {
                 </Text>
 
                 <Text className="text-slate-600 mb-1">
-                  📍 {item.pickup_location}
+                  <Ionicons name="location-outline" size={13} color="#475569" /> {item.pickup_location}
                 </Text>
 
                 <Text className="text-slate-600 mb-1">🏪 {item.shop_name}</Text>
@@ -486,13 +487,15 @@ export default function Result() {
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    className="bg-slate-700 px-4 py-3 rounded-xl flex-1 items-center"
+                    className="bg-slate-700 px-4 py-3 rounded-xl flex-1 items-center flex-row justify-center"
+                    style={{ gap: 6 }}
                     onPress={() => {
                       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                       router.push(`/(tabs)/map?destLat=${item.lat}&destLng=${item.lng}&destName=${encodeURIComponent(item.shop_name || item.name)}`);
                     }}
                   >
-                    <Text className="text-white font-bold">📍 Map</Text>
+                    <Ionicons name="map-outline" size={16} color="white" />
+                    <Text className="text-white font-bold">Map</Text>
                   </TouchableOpacity>
                 </View>
               </View>

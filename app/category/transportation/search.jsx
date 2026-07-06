@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function TransportSearch() {
   const router = useRouter();
@@ -96,7 +97,8 @@ export default function TransportSearch() {
       </Text>
 
       <TouchableOpacity style={styles.locationBtn} onPress={detectLocation}>
-        <Text style={styles.locationText}>📍 Use Current Location</Text>
+        <Ionicons name="locate-outline" size={16} color="#0b3d91" style={{ marginRight: 6 }} />
+        <Text style={styles.locationText}>Use Current Location</Text>
       </TouchableOpacity>
 
 
@@ -219,6 +221,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
     alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   locationText: {

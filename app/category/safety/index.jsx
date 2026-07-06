@@ -1,17 +1,18 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
+import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Linking,
-  ActivityIndicator,
-  Alert,
+    ActivityIndicator,
+    Alert,
+    Linking,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useEffect } from "react";
-import { useRouter } from "expo-router";
 import { ADMIN_URL } from "../../../config";
-import * as Haptics from "expo-haptics";
 
 const BASE_URL = ADMIN_URL;
 
@@ -82,8 +83,8 @@ export default function SafetyPage() {
               key={item.id}
               activeOpacity={0.85}
               onPress={() => makeCall(item.number)}
-              className="flex-row items-center bg-white p-4 rounded-2xl mb-4 shadow"
-              style={{ borderLeftColor: item.color, borderLeftWidth: 6 }}
+              className="flex-row items-center bg-white p-4 rounded-2xl mb-4"
+              style={{ borderLeftColor: item.color, borderLeftWidth: 6, shadowColor: "#64748b", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.13, shadowRadius: 10, elevation: 5 }}
             >
               <Text className="text-4xl mr-4">{item.emoji}</Text>
 
@@ -131,13 +132,15 @@ export default function SafetyPage() {
                 policeStations.map(item => (
                   <View
                     key={item.id}
-                    className="bg-orange-100 p-4 rounded-2xl mb-3 shadow"
+                    className="bg-orange-100 p-4 rounded-2xl mb-3"
+                    style={{ shadowColor: "#64748b", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.13, shadowRadius: 10, elevation: 5 }}
                   >
                     <Text className="text-lg font-semibold">{item.name}</Text>
 
-                    <Text className="text-sm text-gray-500 mt-1">
-                      📍 {item.info}
-                    </Text>
+                    <View className="flex-row items-center mt-1" style={{ gap: 4 }}>
+                      <Ionicons name="location-outline" size={13} color="#6b7280" />
+                      <Text className="text-sm text-gray-500 flex-1">{item.info}</Text>
+                    </View>
 
                     <TouchableOpacity
                       onPress={() => {
