@@ -6,7 +6,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("window");
-const APP_VERSION = "1.0.3";
+const APP_VERSION = "1.0.4";  // bumped to force re-show on existing installs
 const ONBOARDING_VERSION_KEY = "sheherly_onboarding_version";
 const ONBOARDING_OLD_KEY = "sheherly_onboarding_done";
 const SCENE_DURATION = 3000;
