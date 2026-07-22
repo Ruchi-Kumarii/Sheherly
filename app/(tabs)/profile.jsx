@@ -15,8 +15,10 @@ const settingsOptions = [
   { id: "1", title: "Edit Profile", route: "edit", needsOnline: true },
   { id: "2", title: "Change Password", route: "change-password", needsOnline: true },
   { id: "3", title: "Saved Places", route: "/(tabs)/offline", needsOnline: false },
-  { id: "4", title: "Delete Account", route: "delete-account", needsOnline: true },
-  { id: "5", title: "Logout", route: "logout", danger: true, needsOnline: false },
+  { id: "4", title: "Customer Support", route: "support", needsOnline: false, icon: "🎧" },
+  { id: "5", title: "Send Feedback", route: "feedback", needsOnline: false, icon: "💬" },
+  { id: "6", title: "Delete Account", route: "delete-account", needsOnline: true },
+  { id: "7", title: "Logout", route: "logout", danger: true, needsOnline: false },
 ];
 
 export default function Profile() {
@@ -264,6 +266,9 @@ export default function Profile() {
                       : "bg-white"
                   }`}
                 >
+                  {option.icon && (
+                    <Text style={{ fontSize: 18, marginRight: 10 }}>{option.icon}</Text>
+                  )}
                   <Text
                     className={`flex-1 text-base font-semibold ${
                       option.danger
