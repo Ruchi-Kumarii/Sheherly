@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Haptics from "expo-haptics";
@@ -36,6 +36,12 @@ export default function CustomerSupport() {
   const [description, setDescription] = useState("");
   const [sending, setSending] = useState(false);
   const [toast, setToast] = useState({ visible: false, message: "", type: "info" });
+
+  // Ping the server as soon as screen opens so free-tier cold start
+  // happens in the background before the user hits Submit
+  useEffect(() => {
+    fetch(`${ADMIN_URL}/`).catch(() => {});
+  }, []);
 
   const showToast = (message, type = "info") => {
     setToast({ visible: true, message, type });
@@ -70,15 +76,25 @@ export default function CustomerSupport() {
     try {
       setSending(true);
 
-      const response = await fetch(`${ADMIN_URL}/api/admin/support-email`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userEmail,
-          category: selectedCategory.label,
-          description: description.trim(),
-        }),
-      });
+      // Allow up to 90s for Render free tier cold start
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 90000);
+
+      let response;
+      try {
+        response = await fetch(`${ADMIN_URL}/api/admin/support-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            userEmail,
+            category: selectedCategory.label,
+            description: description.trim(),
+          }),
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
 
       const data = await response.json().catch(() => ({}));
 
@@ -93,7 +109,11 @@ export default function CustomerSupport() {
     } catch (err) {
       console.log("SUPPORT REQUEST ERROR:", err);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      showToast(err.message || "Failed to send request. Please try again.", "error");
+      if (err.name === "AbortError") {
+        showToast("Server is waking up. Please try again in 30 seconds.", "error");
+      } else {
+        showToast(err.message || "Failed to send request. Please try again.", "error");
+      }
     } finally {
       setSending(false);
     }

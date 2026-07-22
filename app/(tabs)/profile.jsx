@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
@@ -15,8 +15,7 @@ const settingsOptions = [
   { id: "1", title: "Edit Profile", route: "edit", needsOnline: true },
   { id: "2", title: "Change Password", route: "change-password", needsOnline: true },
   { id: "3", title: "Saved Places", route: "/(tabs)/offline", needsOnline: false },
-  { id: "4", title: "Customer Support", route: "support", needsOnline: false, icon: "🎧" },
-  { id: "5", title: "Send Feedback", route: "feedback", needsOnline: false, icon: "💬" },
+  { id: "5", title: "Send Feedback", route: "feedback", needsOnline: false },
   { id: "6", title: "Delete Account", route: "delete-account", needsOnline: true },
   { id: "7", title: "Logout", route: "logout", danger: true, needsOnline: false },
 ];
@@ -290,6 +289,53 @@ export default function Profile() {
             })}
           </View>
         )}
+
+        {/* Customer Support Footer */}
+        <View className="mx-6 mb-10">
+          <View
+            style={{
+              backgroundColor: "white",
+              borderRadius: 16,
+              padding: 20,
+              shadowColor: "#64748b",
+              shadowOffset: { width: 0, height: 3 },
+              shadowOpacity: 0.12,
+              shadowRadius: 8,
+              elevation: 4,
+            }}
+          >
+            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
+              <Text style={{ fontSize: 22, marginRight: 10 }}>💬</Text>
+              <Text style={{ fontSize: 16, fontWeight: "700", color: "#1e293b" }}>
+                Need Help?
+              </Text>
+            </View>
+            <Text style={{ fontSize: 13, color: "#64748b", lineHeight: 20, marginBottom: 16 }}>
+              Have questions or need support? Email us and our team will get back to you within 24 hours.
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                Haptics.selectionAsync();
+                Linking.openURL("mailto:kiro21223@gmail.com?subject=Sheherly Support Request");
+              }}
+              style={{
+                backgroundColor: "#218fb4",
+                borderRadius: 12,
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+              }}
+            >
+              <Text style={{ fontSize: 18 }}>📧</Text>
+              <Text style={{ color: "white", fontWeight: "700", fontSize: 14 }}>
+                kiro21223@gmail.com
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
