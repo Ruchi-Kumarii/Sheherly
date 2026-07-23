@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, Linking } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
@@ -292,7 +292,11 @@ export default function Profile() {
 
         {/* Customer Support Footer */}
         <View className="mx-6 mb-10">
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              Haptics.selectionAsync();
+              router.push("/profile/customer-support");
+            }}
             style={{
               backgroundColor: "white",
               borderRadius: 16,
@@ -302,39 +306,21 @@ export default function Profile() {
               shadowOpacity: 0.12,
               shadowRadius: 8,
               elevation: 4,
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
-            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
-              <Text style={{ fontSize: 22, marginRight: 10 }}>💬</Text>
-              <Text style={{ fontSize: 16, fontWeight: "700", color: "#1e293b" }}>
+            <Text style={{ fontSize: 26, marginRight: 14 }}>🎧</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 15, fontWeight: "700", color: "#1e293b" }}>
                 Need Help?
               </Text>
-            </View>
-            <Text style={{ fontSize: 13, color: "#64748b", lineHeight: 20, marginBottom: 16 }}>
-              Have questions or need support? Email us and our team will get back to you within 24 hours.
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                Haptics.selectionAsync();
-                Linking.openURL("mailto:kiro21223@gmail.com?subject=Sheherly Support Request");
-              }}
-              style={{
-                backgroundColor: "#218fb4",
-                borderRadius: 12,
-                paddingVertical: 12,
-                paddingHorizontal: 16,
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-              }}
-            >
-              <Text style={{ fontSize: 18 }}>📧</Text>
-              <Text style={{ color: "white", fontWeight: "700", fontSize: 14 }}>
-                kiro21223@gmail.com
+              <Text style={{ fontSize: 12, color: "#64748b", marginTop: 3 }}>
+                Contact us or chat with our assistant
               </Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+            <Text style={{ color: "#94a3b8", fontSize: 20 }}>›</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
